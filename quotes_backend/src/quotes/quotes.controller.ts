@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { QuotesService } from './quotes.service';
 import { CreateQuoteDto } from './dto/create-quote.dto';
 import { UpdateQuoteDto } from './dto/update-quote.dto';
@@ -32,11 +32,17 @@ export class QuotesController {
     return this.quotesService.create(createQuoteDto);
   }
 
+  // @Get('quotes')
+  // findAll() {
+  //   return this.quotesService.findAll();
+  // }
+
   @Get('quotes')
-  findAll() {
-    return this.quotesService.findAll();
+  findAll(@Query('quote') quote?: string, @Query('author') author?: string) {
+    return this.quotesService.findAll({ quote, author });
   }
 
+  
   @Get('quotes/:id')
   findOne(@Param('id') id: string) {
     return this.quotesService.findOne(+id);
