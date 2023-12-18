@@ -1,0 +1,57 @@
+    .scrollable-page {
+        height: 100%;
+        overflow-y: auto; /* Enable vertical scrolling */
+        overflow-x: hidden; /* Disable horizontal scrolling */
+        border: black;
+        background-color: rgb(248, 248, 248);
+        padding: 40px 80px;
+  }
+
+  .main-sub{
+    border:2px solid  rgb(195, 189, 189);
+    padding : 30px 150px;
+    background-color: rgb(255, 255, 255);
+  }
+  .title-div{
+    text-align: center;
+    color: black;
+    font-size: 34px;
+    font-weight: bolder;
+
+  }
+  
+  .main-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+
+
+  }
+  
+  .quote-container {
+    border: 1px solid #cb7a08;
+    padding: 20px;
+    margin-bottom: 20px;
+    width: 250%;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .quote-message {
+    margin-bottom: 10px;
+  }
+  
+  .quote-button {
+    align-self: flex-end;
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  
