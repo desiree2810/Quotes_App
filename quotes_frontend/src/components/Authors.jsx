@@ -1,22 +1,40 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import "../css/Authors.css";
 
 function Authors() {
   const [authors, setAuthors] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [authorQuotes, setAuthorQuotes] = useState([]);
+  const navigate = useNavigate(); 
+
+  const baseURL = import.meta.env.VITE_API_URL;
+
 
   useEffect(() => {
     const fetchQuotes = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/authors");
-        const arrayOfAuthors = response.data;
+        const response = await axios.get(`${baseURL}/quotes`);
+        // const arrayOfAuthors = response.data;
 
-        if (Array.isArray(arrayOfAuthors) && arrayOfAuthors.length > 0) {
-          const sortedAuthors = arrayOfAuthors.sort((a, b) =>
+        
+        const arrayOfQuotes = response.data;
+
+        if (Array.isArray(arrayOfQuotes) && arrayOfQuotes.length > 0) {
+          // const sortedAuthors = arrayOfAuthors.sort((a, b) =>
+          //   a.localeCompare(b)
+          // );
+
+          const uniqueAuthorsSet = new Set(
+            arrayOfQuotes.map((quote) => quote.author)
+          );
+
+          const sortedAuthors = Array.from(uniqueAuthorsSet).sort((a, b) =>
             a.localeCompare(b)
           );
+
+
           setAuthors(sortedAuthors);
           console.log(sortedAuthors);
         } else {
@@ -30,16 +48,21 @@ function Authors() {
     fetchQuotes();
   }, []);
 
-  const handleSearch = async () => {
+  const handleSearch = async (e) => {
+    e.preventDefault();
+
     try {
-      const response = await axios.get(
-        `http://localhost:3000/quotes?author=${searchTerm}`
-      );
+      const response = await axios.get(`${baseURL}/quotes`);
       const quotesByAuthor = response.data;
+
+      // console.log("----------------",quotesByAuthor)
 
       if (Array.isArray(quotesByAuthor) && quotesByAuthor.length > 0) {
         setAuthorQuotes(quotesByAuthor);
         console.log(quotesByAuthor);
+
+        // Navigate to the quotes page with the author parameter
+        navigate(`/quotes?author=${searchTerm}`);
       } else {
         console.log("No quotes found for the specified author");
       }
@@ -51,7 +74,6 @@ function Authors() {
   return (
     <>
       <div className="scrollable-page">
-        {/* <Navbar/> */}
         <div className="title-div">Authors</div>
         <div className="allAuthors">
           <div className="search-field">
@@ -73,9 +95,7 @@ function Authors() {
               <div className="quotesforauthor">
                 <ul>
                   {authorQuotes.map((quote, index) => (
-                    <p key={index}>
-                      {quote.author === searchTerm && <p>{quote.quote}</p>}
-                    </p>
+                    <p key={index}>{quote.quote}</p>
                   ))}
                 </ul>
               </div>
@@ -86,7 +106,11 @@ function Authors() {
         <div className="main-sub">
           <div className="main-container">
             {authors.map((author, index) => (
-              <div className="quote-container" key={index}>
+              <div
+                className="quote-container"
+                key={index}
+                onClick={() => navigate(`/quotes?author=${author}`)}
+              >
                 <p className="quote-message">{author}</p>
               </div>
             ))}
@@ -98,3 +122,4 @@ function Authors() {
 }
 
 export default Authors;
+

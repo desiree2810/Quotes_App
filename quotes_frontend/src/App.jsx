@@ -6,6 +6,8 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Quotes from "./components/Quotes";
 import Homescreen from "./components/Homescreen";
 import Authors from "./components/Authors";
+import Signup from "./components/Signup";
+import Login from "./components/Login";
 
 function App() {
   return (
@@ -13,6 +15,8 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<Homescreen />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/quotes" element={<Quotes />} />
           <Route path="/authors" element={<Authors />} />
         </Routes>

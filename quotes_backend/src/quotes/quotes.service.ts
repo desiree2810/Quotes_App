@@ -19,7 +19,7 @@ export class QuotesService {
       like: createQuoteDto.like,
       dislikes: createQuoteDto.dislikes,
       tag: createQuoteDto.tag,
-      // userId: createQuoteDto.userId,
+      userId: createQuoteDto.userId,
     });
     console.log(quote)
   
@@ -27,13 +27,39 @@ export class QuotesService {
   }
   
 
-  async findAll() {
-    return await this.quoteRepository.find({
-      relations: {
-        // user: true,
-      },
-    });
+  // async findAll() {
+  //   return await this.quoteRepository.find({
+  //     relations: {
+  //       // user: true,
+  //     },
+  //   });
+  // }
+
+
+  // find all quotes by author using Query Parameters
+findAll(filter?: { quote?: string, author?: string }): Promise<Quote[]> {
+  if (!filter) {
+    return this.quoteRepository.find();
   }
+
+  const whereClause: any = {};
+
+  // if (filter.quote) {
+  //   whereClause.quote = filter.quote;
+  // }
+
+  if (filter.author) {
+    whereClause.author = filter.author;
+  }
+
+  console.log("quote =", whereClause)
+
+  return this.quoteRepository.find({
+    where: whereClause,
+  });
+}
+
+
 
   async findOne(@Param('id') id: number): Promise<Quote> {
     const quote = await this.quoteRepository.findOne({ where: { id } });
