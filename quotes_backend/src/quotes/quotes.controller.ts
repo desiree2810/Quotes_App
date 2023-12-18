@@ -24,8 +24,6 @@ export class QuotesController {
     return this.quotesService.findAll({ quote, author });
   }
   
-
-
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.quotesService.findOne(+id);
