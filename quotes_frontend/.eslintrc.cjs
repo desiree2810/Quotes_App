@@ -16,5 +16,8 @@ module.exports = {
       'warn',
       { allowConstantExport: true },
     ],
+
+            //comment this below line later if needed
+            "rules": { "no-unused-vars": "off" }        //to prevent eslint from running
   },
 }

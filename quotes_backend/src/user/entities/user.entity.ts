@@ -18,8 +18,9 @@ export class User {
   @Column()
   password: string;
 
-//   @Column()
-//   role: string;
+
+  @Column({ default: true }) // default to active
+    isActive: boolean;
 
   @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP(6)',})
   created_at: Date;
@@ -31,11 +32,5 @@ export class User {
   @OneToMany(() => Quote, (quote) => quote.user)
   quotes: Quote[];
 
-//   // for 1-1 relationship between user and fav-qoutes
-//   // @OneToOne(() => FavouriteQuote, (fav_quote) => fav_quote.user)     //mayur
-//   // favourite_quote: FavouriteQuote;
 
-//     // One-to-Many relationship: One User can have Many FavouriteQuotes
-//     @OneToMany(() => FavouriteQuote, (favouriteQuote) => favouriteQuote.user)     //desiree
-//     favouriteQuotes: FavouriteQuote;
 }

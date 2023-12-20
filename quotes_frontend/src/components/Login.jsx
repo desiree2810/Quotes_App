@@ -1,54 +1,45 @@
-import React from "react";
-import { Button, Grid, Header } from "semantic-ui-react";
+import React, { useState } from "react";
+import { Link } from 'react-router-dom';
+// import { Button, Grid, Header } from "semantic-ui-react";
 
 const Login = () => {
+
+  // const [email, setEmail] = useState("");
+  // const [password, setPassword] = useState("");
+
   return (
-    <div className="ui left aligned container formBorder">
-        <Header size='huge'>Login</Header>
-      
-      <form className="ui form">
 
-        <div className="field">
-          <label>Email</label>
-          <input type="email" name="last-name" placeholder="youremail@example.com" />
+    <div className=" container d-flex justify-content-center align-items-center vh-100" style={{ padding:"10px"}}>
+    <div className="card p-6" style={{ display: "flex" ,  backgroundColor:"#8ec777", width: "43rem", borderRadius: "10px",boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px" }}>
+      <h2 className="card-title text-left mb-4">Login</h2>
+      <form>
+        <div className="form-group mb-3">
+          <input 
+          type="email" 
+          className="form-control" 
+          id="email" 
+          placeholder="Enter Email: example@email.com" 
+          // onChange={(e) => setSearchTerm(e.target.value)}
+          />
         </div>
-
-        <div className="field">
-            
-          <label>Password</label>
-          <input type="password" name="last-name" placeholder="Password" />
+        <div className="form-group mb-3">
+          <input type="password" className="form-control" id="password" placeholder="Enter Password" />
         </div>
+        <div >
+          <div className="buttonset">
+            {/* <small style={{ fontSize: "0.7rem" }}>Already have an account? </small>
+            <a href="#" style={{ color: "blue", fontSize: 'small', marginLeft: '5px' }}>Login</a> */}
+            <button className="btn btn-primary mr-5 px-3 py-2">Login</button>
+            <Link to="/signup">
+             <button className="btn btn-warning px-3 py-2">Signup</button>
+             </Link>
+          </div>
 
-        {/* <button className="ui primary button" type="submit">
-          Signup
-        </button> */}
-        {/* <div className="ui right aligned container">
-        <button className="ui primary button" type="submit">
-          Login
-        </button>
-        </div> */}
-
-        <Grid columns={2}>
-          <Grid.Column>
-            <Button className="ui primary button" type="submit">
-              Login
-            </Button>
-          </Grid.Column>
-
-          <Grid.Column textAlign="right">
-            New User? 
-            <Button className="ui button" type="submit">
-              Signup
-            </Button>
-          </Grid.Column>
-        </Grid>
-
+        </div>
       </form>
     </div>
+  </div>
   );
 };
 
 export default Login;
-
-
-
