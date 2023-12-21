@@ -15,7 +15,7 @@ export class UserQuoteReactionService {
   create(createUserQuoteReactionDto: CreateUserQuoteReactionDto) {
     let userquotereaction: UserQuoteReaction = new UserQuoteReaction();
     userquotereaction.like = CreateUserQuoteReactionDto.like;
-    userquotereaction.dislike = CreateUserQuoteReactionDto.dislike;
+    userquotereaction.dislikes = CreateUserQuoteReactionDto.dislike;
     return this.userQuoteReactionRepository.save(userquotereaction);
   }
 

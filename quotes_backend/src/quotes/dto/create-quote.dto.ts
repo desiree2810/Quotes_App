@@ -22,5 +22,5 @@ export class CreateQuoteDto {
     @IsString()
     tag: string;
     
-    userId:number
+    userId:string
 }

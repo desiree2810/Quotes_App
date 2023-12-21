@@ -4,8 +4,8 @@ import { User } from 'src/user/entities/user.entity';
 
 @Entity({ name: 'quote' })
 export class Quote {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column()
   quote: string;
@@ -30,17 +30,11 @@ export class Quote {
 
   // for m-1 relationship between quote & user
   @Column({ name: 'user_id' })
-  userId: number;
+  userId: string;
 
-  @ManyToOne(() => User, (user) => user.quotes)
+  @ManyToOne(() => User)
   @JoinColumn({ name: 'user_id' })
   user: User;
-
-  // new changes one to many
-  // for m-n relationship between quotes & fav-quotes
-  // @OneToMany(() => FavouriteQuote, (favouriteQuote) => favouriteQuote.quote)
-  // favouriteQuotes: FavouriteQuote[];
-
 
 }
 

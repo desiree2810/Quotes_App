@@ -3,8 +3,8 @@ import {Column,Entity,CreateDateColumn,UpdateDateColumn,PrimaryGeneratedColumn,O
 
 @Entity()
 export class User {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column()
   first_name: string;
@@ -27,10 +27,5 @@ export class User {
 
   @UpdateDateColumn({type: 'timestamp', default: () => 'CURRENT_TIMESTAMP(6)', onUpdate: 'CURRENT_TIMESTAMP(6)',})
   updated_at: Date;
-
-  // for 1-M relationship between User & quote
-  @OneToMany(() => Quote, (quote) => quote.user)
-  quotes: Quote[];
-
 
 }

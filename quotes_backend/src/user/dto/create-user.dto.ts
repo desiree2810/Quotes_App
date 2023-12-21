@@ -5,6 +5,7 @@ import {
     MaxLength,
     MinLength,
   } from 'class-validator';
+import { Unique } from 'typeorm';
   
   export class CreateUserDto {
     @IsString()

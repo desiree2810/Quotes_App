@@ -1,13 +1,26 @@
-import { Controller, Get, Post, Body, Patch,Put, Param, Delete,Req,  ValidationPipe } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Put,
+  Param,
+  Delete,
+  Request,
+  UseGuards,
+  ValidationPipe,
+} from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { JwtAuthGuard } from 'src/auth/guard/jwt.guard';
 
-@Controller('user')
+@Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Post("/signUp")
+  @Post('/signUp')
   create(@Body(ValidationPipe) createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);
   }
@@ -17,43 +30,49 @@ export class UserController {
     return this.userService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.userService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(+id, updateUserDto);
-  }
-
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.userService.remove(+id);
+  // @Get(':id')
+  // findOne(@Param('id') id: string) {
+  //   return this.userService.findOne(id);
   // }
 
-  @Put(':id')
-  softDeleteUser(@Param('id') id: number) {
-    // return this.userService.softDeleteUser(id);
-    // return `isActive set to True for id ${id}`;
+  @Patch()
+  @UseGuards(JwtAuthGuard)
+  update(@Request() req: any, @Body() updateUserDto: UpdateUserDto) {
+    const userId = req.user.userId; ///to get userID
+    console.log(userId);
+    return this.userService.update(userId, updateUserDto);
+  }
+
+  @Delete(':id')
+  softDeleteUser(@Param('id') id: string) {
     return this.userService.softDeleteUser(id);
   }
-  
 
-  // @Post('soft-delete/:id')
-  // softDeleteUser(@Param('id') id: number): Promise<void> {
-  //   return this.userService.softDeleteUser(id);
-  // }
+  // to fetch all quotes by userid
+  @Get(':id/quotes')
+  async fetchAllQuotesByUser(@Param('id') id: string) {
+    try {
+      const quotes = await this.userService.fetchAllQuotesByUser(id);
+      return { quotes };
+    } catch (error) {
+      return {
+        error: error.message,
+      };
+    }
+  }
 
-//   @Get(':id/quotes')
-//   findQuotesByUserId(@Param('id') id: string) {
-//   console.log(" -------------userid--------------->",id);
-//   return this.userService.findQuotesByUserId(+id);
-// }
-  
 
-// @Get(':id/favourite-quotes')
-// findFavouriteQuotesByUserId(@Param('id') id: string) {
-//   return this.userService.findFavouriteQuotesByUserId(+id);
-// }
+//Fetches the quotes liked by the user
+@Get(':id/favourite-quotes')
+async fetchAllQuotesLikedByUser(@Param('id') id: string) {
+  try {
+    const quotes = await this.userService.fetchAllQuotesLikedByUser(id);
+    return { quotes };
+  } catch (error) {
+    return { 
+     error: error.message };
+  }
+}
+
+
 }

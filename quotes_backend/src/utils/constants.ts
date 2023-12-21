@@ -1,3 +1,3 @@
 export const Constants= {
-    BY_PASS_URLS : ["/user/signUp","/auth/login"],
+    BY_PASS_URLS : ["/users/signUp","/auth/login","/quotes"],
 }

@@ -8,9 +8,9 @@ export class CreateUserQuoteReactionDto {
     // @IsBoolean()
     dislike: boolean;
 
-    quoteId: number;
+    quoteId: string;
 
-    userId: number
+    userId: string
   static like: boolean;
   static dislike: boolean;
 }

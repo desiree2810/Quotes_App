@@ -70,7 +70,7 @@ findAll(filter?: { author?: string }): Promise<Quote[]> {
 
 
 
-  async findOne(@Param('id') id: number): Promise<Quote> {
+  async findOne(@Param('id') id: string): Promise<Quote> {
     const quote = await this.quoteRepository.findOne({ where: { id } });
     if (!quote) {
       throw new NotFoundException(`Quote with ID #${id} not found`);
@@ -78,7 +78,7 @@ findAll(filter?: { author?: string }): Promise<Quote[]> {
     return quote;
   }
 
-  async update(id: number, updateQuoteDto: UpdateQuoteDto) {
+  async update(id: string, updateQuoteDto: UpdateQuoteDto) {
     const quote = await this.findOne(id);
     if (!quote) {
       throw new NotFoundException(`Quote #${id} not found`);
@@ -88,7 +88,7 @@ findAll(filter?: { author?: string }): Promise<Quote[]> {
     return await this.quoteRepository.save(quote);
   }
 
-  async remove(id: number) {
+  async remove(id: string) {
     const quote = await this.findOne(id);
     if (!quote) {
       throw new NotFoundException(`Quote #${id} not found`);
@@ -134,24 +134,24 @@ async getAllTagsByQuote() {
 }
 
 //increment count by 1 for liked quote
-async likeQuote(id: number, user_id:number){
+async likeQuote(id: string, user_id:string){
   await this.updatelikeReactionCount(id, 'like' , 1, user_id);
 }
 
-private async updatelikeReactionCount(id: number, reactionType:string, increment: number, userId:number) {
+private async updatelikeReactionCount(id: string, reactionType:string, increment: number, userId:string) {
   const quote = await this.quoteRepository.findOne({where:{id:id}});
   
   if (!quote) {
     throw new NotFoundException(`Quote with ID ${id} not found`);
   }
   
-  quote[reactionType] += increment;
+  // quote[reactionType] += increment;
   
-  await this.quoteRepository.update(id, quote);
+  // await this.quoteRepository.update(id, quote);
   
     const userQuoteReaction = this.userQuoteReactionRepository.create({
     like: reactionType === 'like' ? true : false,
-    dislike: reactionType === 'dislikes' ? true : false,
+    dislikes: reactionType === 'dislikes' ? true : false,
     quoteId: id,
     userId: userId , 
   });
@@ -161,24 +161,24 @@ private async updatelikeReactionCount(id: number, reactionType:string, increment
 
 
 //increment count by 1 for disliked quote
-async dislikeQuote(id: number, user_id:number){
+async dislikeQuote(id: string, user_id:string){
   await this.updatedislikeReactionCount(id, 'dislikes' , 1, user_id);
 }
 
-private async updatedislikeReactionCount(id: number, reactionType:string, increment: number, userId:number) {
+private async updatedislikeReactionCount(id: string, reactionType:string, increment: number, userId:string) {
   const quote = await this.quoteRepository.findOne({where:{id:id}});
 
   if (!quote) {
     throw new NotFoundException(`Quote with ID ${id} not found`);
   }
 
-  quote[reactionType] += increment;
+  // quote[reactionType] += increment;
 
-  await this.quoteRepository.update(id, quote);
+  // await this.quoteRepository.update(id, quote);
   
   const userQuoteReaction = this.userQuoteReactionRepository.create({
     like: reactionType === 'like' ? true : false,
-    dislike: reactionType === 'dislikes' ? true : false,
+    dislikes: reactionType === 'dislikes' ? true : false,
     quoteId: id,
     userId: userId, 
   });
@@ -187,11 +187,11 @@ private async updatedislikeReactionCount(id: number, reactionType:string, increm
 }
 
 //decrement count by 1 for liked quote
-async remove_likeQuote(id: number, user_id:number){
+async remove_likeQuote(id: string, user_id:string){
   await this.updateremove_likeReactionCount(id, 'like' , 1, user_id);
 }
 
-private async updateremove_likeReactionCount(id: number, reactionType:string, decrement: number, userId:number) {
+private async updateremove_likeReactionCount(id: string, reactionType:string, decrement: number, userId:string) {
   const quote = await this.quoteRepository.findOne({where:{id:id}});
   
   if (!quote) {
@@ -207,18 +207,18 @@ private async updateremove_likeReactionCount(id: number, reactionType:string, de
       quoteId: id,
       userId: userId,
       like: true,
-      dislike: false
+      dislikes: false
     });
 
 }
 
 
 //decrement count by 1 for disliked quote
-async remove_dislikeQuote(id: number, user_id:number){
+async remove_dislikeQuote(id: string, user_id:string){
   await this.updateremove_dislikeReactionCount(id, 'dislikes' , 1, user_id);
 }
 
-private async updateremove_dislikeReactionCount(id: number, reactionType:string, decrement: number, userId:number) {
+private async updateremove_dislikeReactionCount(id: string, reactionType:string, decrement: number, userId:string) {
   const quote = await this.quoteRepository.findOne({where:{id:id}});
   
   if (!quote) {
@@ -235,18 +235,38 @@ private async updateremove_dislikeReactionCount(id: number, reactionType:string,
     quoteId: id,
     userId: userId,
     like:false,
-    dislike: true
+    dislikes: true
   });
 
 }
 
+// get all users who liked a single quote
+async getAllLikedUsers(id: string): Promise<User[]> {
+  const likedUsers = await this.userQuoteReactionRepository.find({
+    where: { quoteId: id, like: true },
+    relations: ['user'],
+  });
 
+  if (likedUsers.length === 0) {
+    throw new NotFoundException(`No users found who liked the quote with ID #${id}`);
+  }
 
+  return likedUsers.map((userReaction) => userReaction.user);
+}
 
+// get all users who disliked a single quote
+async getAllDislikedUsers(id: string): Promise<User[]> {
+  const dislikedUsers = await this.userQuoteReactionRepository.find({
+    where: { quoteId: id, dislikes: true },
+    relations: ['user'],
+  });
 
+  if (dislikedUsers.length === 0) {
+    throw new NotFoundException(`No users found who liked the quote with ID #${id}`);
+  }
 
-
-
+  return dislikedUsers.map((userReaction) => userReaction.user);
+}
 
 
 }

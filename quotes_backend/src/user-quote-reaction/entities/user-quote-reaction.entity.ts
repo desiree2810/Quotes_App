@@ -5,20 +5,20 @@ import { Quote } from 'src/quotes/entities/quote.entity';
 
 @Entity()
 export class UserQuoteReaction {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column()
   like: boolean;
 
   @Column()
-  dislike: boolean;
+  dislikes: boolean;
 
   @Column()
-  quoteId: number;
+  quoteId: string;
 
   @Column()
-  userId: number;
+  userId: string;
 
   @ManyToOne(() => User)
   @JoinColumn({ name: 'userId' })
