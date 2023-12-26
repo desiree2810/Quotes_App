@@ -156,7 +156,6 @@ private async updatelikeReactionCount(id: string, reactionType:string, increment
   }
   
   // quote[reactionType] += increment;
-  
   // await this.quoteRepository.update(id, quote);
   
     const userQuoteReaction = this.userQuoteReactionRepository.create({
@@ -183,7 +182,6 @@ private async updatedislikeReactionCount(id: string, reactionType:string, increm
   }
 
   // quote[reactionType] += increment;
-
   // await this.quoteRepository.update(id, quote);
   
   const userQuoteReaction = this.userQuoteReactionRepository.create({
@@ -208,9 +206,8 @@ private async updateremove_likeReactionCount(id: string, reactionType:string, de
     throw new NotFoundException(`Quote with ID ${id} not found`);
   }
   
-  quote[reactionType] -= decrement;
-  
-  await this.quoteRepository.update(id, quote);
+  // quote[reactionType] -= decrement;
+  // await this.quoteRepository.update(id, quote);
 
     // to del likes
     await this.userQuoteReactionRepository.delete({
@@ -235,9 +232,8 @@ private async updateremove_dislikeReactionCount(id: string, reactionType:string,
     throw new NotFoundException(`Quote with ID ${id} not found`);
   }
   
-  quote[reactionType] -= decrement;
-  
-  await this.quoteRepository.update(id, quote);
+  // quote[reactionType] -= decrement;
+  // await this.quoteRepository.update(id, quote);
 
 
   // to del dislikes
@@ -280,7 +276,7 @@ async getAllDislikedUsers(id: string): Promise<User[]> {
 
 
 // task scheduler to count the total number of likes and dislikes for a quote 
-@Cron(CronExpression.EVERY_30_SECONDS)
+@Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)        //change this to EVERY_DAY_AT_MIDNIGHT once done
 async countLikesAndDislikes(): Promise<void> {
   const quotes = await this.quoteRepository.find();
 
@@ -293,28 +289,19 @@ async countLikesAndDislikes(): Promise<void> {
       where: { quoteId: eachQuote.id, dislikes: true },
     });
 
+    // to store all likes & dislikes of each quotebyId in quotes table (like & dislike column)
+    eachQuote.like = likedCount;
+    eachQuote.dislikes = dislikedCount;
+
     // to display all likes & dislikes of each quotebyId
+    // comment/comment whenever needed to cross-check
     console.log(`likedCount for ${eachQuote.id} =`, likedCount)
     console.log(`dislikedCount for ${eachQuote.id} =`, dislikedCount)
     console.log()
 
-
-    // eachQuote.like = likedCount;
-    // eachQuote.dislikes = dislikedCount;
-    // console.log("-----------------------", eachQuote.like)
-    // console.log("-----------------------", eachQuote.dislikes)
-
-    // await this.quoteRepository.save(quote);
+    await this.quoteRepository.save(eachQuote);
 }
 }
-
-
-
-
-
-
-
-
 
 
 }
