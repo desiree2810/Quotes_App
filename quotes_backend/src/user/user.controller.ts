@@ -4,27 +4,41 @@ import {
   Post,
   Body,
   Patch,
-  Put,
   Param,
   Delete,
   Request,
-  UseGuards,
   ValidationPipe,
+  HttpException,
+  HttpStatus
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { JwtAuthGuard } from 'src/auth/guard/jwt.guard';
+import { SkipThrottle } from '@nestjs/throttler';
 
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  // @SkipThrottle()
+  // @Post('/signUp')
+  // create(@Body(ValidationPipe) createUserDto: CreateUserDto) {
+  //   return this.userService.create(createUserDto);
+  // }
+
+  @SkipThrottle()
   @Post('/signUp')
-  create(@Body(ValidationPipe) createUserDto: CreateUserDto) {
-    return this.userService.create(createUserDto);
+  async create(@Body(ValidationPipe) createUserDto: CreateUserDto) {
+    const existingUser = await this.userService.findUserByEmail(createUserDto.email);
+    console.log(existingUser);
+      if (existingUser) {
+        throw new HttpException('Email already exists', HttpStatus.CONFLICT);
+      }
+  return await this.userService.create(createUserDto);
   }
 
+
+  @SkipThrottle()
   @Get()
   findAll() {
     return this.userService.findAll();
@@ -35,14 +49,15 @@ export class UserController {
   //   return this.userService.findOne(id);
   // }
 
+  @SkipThrottle()
   @Patch()
-  @UseGuards(JwtAuthGuard)
   update(@Request() req: any, @Body() updateUserDto: UpdateUserDto) {
     const userId = req.user.userId; ///to get userID
     console.log(userId);
     return this.userService.update(userId, updateUserDto);
   }
 
+  @SkipThrottle()
   @Delete(':id')
   softDeleteUser(@Param('id') id: string) {
     return this.userService.softDeleteUser(id);
@@ -61,6 +76,17 @@ export class UserController {
     }
   }
 
+  //Fetches the quotes disliked by the user
+  @Get(':id/unfavourite-quotes')
+  async fetchAllQuotesDislikedByUser(@Param('id') id: string) {
+    try {
+      const quotes = await this.userService.fetchAllQuotesDislikedByUser(id);
+      return { quotes };
+    } catch (error) {
+      return { 
+       error: error.message };
+    }
+  }
 
 //Fetches the quotes liked by the user
 @Get(':id/favourite-quotes')
@@ -73,6 +99,7 @@ async fetchAllQuotesLikedByUser(@Param('id') id: string) {
      error: error.message };
   }
 }
+
 
 
 }

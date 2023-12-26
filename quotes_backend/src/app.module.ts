@@ -7,6 +7,10 @@ import { QuotesModule } from './quotes/quotes.module';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { UserQuoteReactionModule } from './user-quote-reaction/user-quote-reaction.module';
+import { ThrottlerModule } from '@nestjs/throttler';
+import { APP_GUARD} from '@nestjs/core';
+import { ThrottlerGuard } from '@nestjs/throttler';
+
 
 @Module({
   imports: [
@@ -32,10 +36,20 @@ import { UserQuoteReactionModule } from './user-quote-reaction/user-quote-reacti
     QuotesModule,
     UserModule,
     AuthModule,
-    UserQuoteReactionModule
+    UserQuoteReactionModule,
+    ThrottlerModule.forRoot([
+      {
+        name: 'quotesAccess', 
+        ttl: 86400000, // 24 hours in milliseconds   86400000
+        limit: 2, // 10 requests per 24 hours        10
+      },
+    ])
 
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService,{
+    provide: APP_GUARD,
+    useClass: ThrottlerGuard,
+  }],
 })
 export class AppModule {}

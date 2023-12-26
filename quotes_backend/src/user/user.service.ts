@@ -19,10 +19,9 @@ export class UserService {
     @InjectRepository(UserQuoteReaction)
     private readonly UserQuoteReactionRepository: Repository<UserQuoteReaction>
     ) 
-    
     {}
     
-
+    
   create(createUserDto: CreateUserDto): Promise<User> {
     let user: User = new User();
     user.first_name = createUserDto.first_name;
@@ -49,7 +48,7 @@ export class UserService {
   }
 
   findUserByEmail(email : string){
-    return this.userRepository.findOneOrFail({  where: { email: email }, } );
+    return this.userRepository.findOne({  where: { email: email }, } );
   }
 
   findUserById(id: string){
@@ -100,12 +99,11 @@ async fetchAllQuotesByUser(id: string): Promise<Quote[]> {
   }
   return ALlQuotes
 
-  // return ALlQuotes.map((ALlQuote) => ALlQuotes.quote);
 }
 
 
 //Fetches the quotes disliked by the user
-async fetchAllQuotesDilikedByUser(id: string) {
+async fetchAllQuotesDislikedByUser(id: string) {
   const ALlDislikedQuotes = await this.UserQuoteReactionRepository.find({
     where: { userId: id, dislikes :true },
     relations: ['quote']
@@ -115,7 +113,6 @@ async fetchAllQuotesDilikedByUser(id: string) {
   if (ALlDislikedQuotes.length === 0) {
     throw new NotFoundException(`No users found who disliked the quote with ID #${id}`);
   }
-  // return ALlDislikedQuotes
 
   return ALlDislikedQuotes.map((ALlDislikedQuote) => ALlDislikedQuote.quote.quote);
 }
@@ -132,7 +129,6 @@ async fetchAllQuotesLikedByUser(id: string) {
   if (ALLlikedQuotes.length === 0) {
     throw new NotFoundException(`No users found who liked the quote with ID #${id}`);
   }
-  // return ALLlikedQuotes
 
   return ALLlikedQuotes.map((ALLlikedQuote) => ALLlikedQuote.quote.quote);
 }

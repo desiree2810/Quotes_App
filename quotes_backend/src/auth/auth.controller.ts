@@ -1,6 +1,7 @@
 import { Controller, Post, Req, UseGuards, } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { AuthGuard } from '@nestjs/passport';
+import { SkipThrottle } from '@nestjs/throttler';
 import { User } from 'src/user/entities/user.entity';
 
 @Controller("auth")
@@ -11,6 +12,7 @@ export class AuthController {
 
   }
 
+  @SkipThrottle()
   @Post("/login")
   @UseGuards(AuthGuard("local"))
   login(@Req() req) {

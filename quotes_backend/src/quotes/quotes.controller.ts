@@ -4,12 +4,16 @@ import { CreateQuoteDto } from './dto/create-quote.dto';
 import { UpdateQuoteDto } from './dto/update-quote.dto';
 import { User } from 'src/user/entities/user.entity';
 import { JwtAuthGuard } from 'src/auth/guard/jwt.guard';
+import { Throttle, ThrottlerGuard, SkipThrottle } from '@nestjs/throttler';
 
+
+// @UseGuards(ThrottlerGuard)
+// @Throttle('quotesAccess')
 @Controller('quotes')
 export class QuotesController {
   constructor(private readonly quotesService: QuotesService) {}
 
-  
+  @SkipThrottle()
   @Post()
   create(@Body() createQuoteDto: CreateQuoteDto) {
     return this.quotesService.create(createQuoteDto);
@@ -104,6 +108,7 @@ async remove_dislikeQuote( @Request() req: any , @Param('id') id: string) {
   }
 }
 
+@SkipThrottle()
   // find all users who liked the quote
 @Get(':id/like/users')
 async getAllLikedUsers(@Param('id') id: string) {
@@ -112,11 +117,11 @@ async getAllLikedUsers(@Param('id') id: string) {
     return { users };
   } catch (error) {
     return { 
-      // message: 'Error getting users who liked the quote',
      error: error.message };
   }
 }
 
+@SkipThrottle()
 @Get(':id/dislike/users')
 async getAllDislikedUsers(@Param('id') id: string) {
   try {
@@ -124,7 +129,6 @@ async getAllDislikedUsers(@Param('id') id: string) {
     return { users };
   } catch (error) {
     return { 
-      // message: 'Error getting users who disliked the quote',
      error: error.message };
   }
 }

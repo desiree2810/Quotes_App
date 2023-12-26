@@ -1,4 +1,4 @@
-import { Body, Injectable, NotFoundException, Param } from '@nestjs/common';
+import { Body, Injectable, Logger, NotFoundException, Param } from '@nestjs/common';
 import { CreateQuoteDto } from './dto/create-quote.dto';
 import { UpdateQuoteDto } from './dto/update-quote.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -7,6 +7,7 @@ import { Quote } from './entities/quote.entity';
 import { UserQuoteReaction } from 'src/user-quote-reaction/entities/user-quote-reaction.entity';
 import { User } from 'src/user/entities/user.entity';
 import { Repository } from 'typeorm';
+import { Cron, CronExpression } from '@nestjs/schedule';
 
 @Injectable()
 export class QuotesService {
@@ -20,6 +21,15 @@ export class QuotesService {
     private readonly userRepository: Repository<User>
 
   ) {}
+
+
+  // logger TASK SHEDULER
+  private readonly logger = new Logger(QuotesService.name);
+
+  @Cron('* * * * *')
+  handleCron() {
+    this.logger.debug('Called when the 60 seconds elapses');
+  }
 
   async create(@Body() createQuoteDto: CreateQuoteDto) {
     const quote = this.quoteRepository.create({
@@ -267,6 +277,44 @@ async getAllDislikedUsers(id: string): Promise<User[]> {
 
   return dislikedUsers.map((userReaction) => userReaction.user);
 }
+
+
+// task scheduler to count the total number of likes and dislikes for a quote 
+@Cron(CronExpression.EVERY_30_SECONDS)
+async countLikesAndDislikes(): Promise<void> {
+  const quotes = await this.quoteRepository.find();
+
+  for (const eachQuote of quotes) {
+    const likedCount = await this.userQuoteReactionRepository.count({
+      where: { quoteId: eachQuote.id, like: true },
+    });
+    
+    const dislikedCount = await this.userQuoteReactionRepository.count({
+      where: { quoteId: eachQuote.id, dislikes: true },
+    });
+
+    // to display all likes & dislikes of each quotebyId
+    console.log(`likedCount for ${eachQuote.id} =`, likedCount)
+    console.log(`dislikedCount for ${eachQuote.id} =`, dislikedCount)
+    console.log()
+
+
+    // eachQuote.like = likedCount;
+    // eachQuote.dislikes = dislikedCount;
+    // console.log("-----------------------", eachQuote.like)
+    // console.log("-----------------------", eachQuote.dislikes)
+
+    // await this.quoteRepository.save(quote);
+}
+}
+
+
+
+
+
+
+
+
 
 
 }
