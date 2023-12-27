@@ -210,9 +210,9 @@ private async updateremove_likeReactionCount(id: string, reactionType:string, de
     throw new NotFoundException(`Quote with ID ${id} not found`);
   }
   
-  quote[reactionType] -= decrement;
+  // quote[reactionType] -= decrement;
   
-  await this.quoteRepository.update(id, quote);
+  // await this.quoteRepository.update(id, quote);
 
     // to del likes
     await this.userQuoteReactionRepository.delete({
@@ -237,9 +237,9 @@ private async updateremove_dislikeReactionCount(id: string, reactionType:string,
     throw new NotFoundException(`Quote with ID ${id} not found`);
   }
   
-  quote[reactionType] -= decrement;
+  // quote[reactionType] -= decrement;
   
-  await this.quoteRepository.update(id, quote);
+  // await this.quoteRepository.update(id, quote);
 
 
   // to del dislikes
