@@ -8,10 +8,11 @@ import { UserQuoteReaction } from 'src/user-quote-reaction/entities/user-quote-r
 // import { ThrottlerGuard } from '@nestjs/throttler';
 // import { APP_GUARD } from '@nestjs/core';
 import { ScheduleModule } from '@nestjs/schedule';
+import { UserModule } from 'src/user/user.module';
 
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Quote,UserQuoteReaction, User]), ScheduleModule.forRoot()],
+  imports: [TypeOrmModule.forFeature([Quote,UserQuoteReaction, User]), ScheduleModule.forRoot(), UserModule],
   controllers: [QuotesController],
   providers: [QuotesService],
 })

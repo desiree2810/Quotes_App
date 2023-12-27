@@ -39,9 +39,9 @@ import { ThrottlerGuard } from '@nestjs/throttler';
     UserQuoteReactionModule,
     ThrottlerModule.forRoot([
       {
-        name: 'quotesAccess', 
+        // name: 'quotesAccess', 
         ttl: 86400000, // 24 hours in milliseconds   86400000
-        limit: 2, // 10 requests per 24 hours        10
+        limit: 10, // 10 requests per 24 hours        10
       },
     ])
 

@@ -3,11 +3,11 @@ import { CreateQuoteDto } from './dto/create-quote.dto';
 import { UpdateQuoteDto } from './dto/update-quote.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Quote } from './entities/quote.entity';
-// import { UserQuoteReaction } from './entities/user-quote-reaction.entity';
 import { UserQuoteReaction } from 'src/user-quote-reaction/entities/user-quote-reaction.entity';
 import { User } from 'src/user/entities/user.entity';
 import { Repository } from 'typeorm';
 import { Cron, CronExpression } from '@nestjs/schedule';
+import { UserService } from 'src/user/user.service';
 
 @Injectable()
 export class QuotesService {
@@ -17,33 +17,37 @@ export class QuotesService {
     @InjectRepository(UserQuoteReaction)
     private readonly userQuoteReactionRepository: Repository<UserQuoteReaction>,
 
-    @InjectRepository(User)
-    private readonly userRepository: Repository<User>
+    // @InjectRepository(User)
+    // private readonly userRepository: Repository<User>,
+    private readonly userService: UserService
 
   ) {}
 
 
   // logger TASK SHEDULER
-  private readonly logger = new Logger(QuotesService.name);
+  // private readonly logger = new Logger(QuotesService.name);
 
-  @Cron('* * * * *')
-  handleCron() {
-    this.logger.debug('Called when the 60 seconds elapses');
-  }
+  // @Cron('* * * * *')
+  // handleCron() {
+  //   this.logger.debug('Called when the 60 seconds elapses');
+  // }
 
-  async create(@Body() createQuoteDto: CreateQuoteDto) {
-    const quote = this.quoteRepository.create({
-      quote: createQuoteDto.quote,
-      author: createQuoteDto.author,
-      like: createQuoteDto.like,
-      dislikes: createQuoteDto.dislikes,
-      tag: createQuoteDto.tag,
-      userId: createQuoteDto.userId,
-    });
-    console.log(quote)
+ 
+create(@Body() createQuoteDto: CreateQuoteDto, id:any){
   
-    return await this.quoteRepository.save(quote);
-  }
+  const quote = this.quoteRepository.create({
+    quote: createQuoteDto.quote,
+    author: createQuoteDto.author,
+    like: createQuoteDto.like,
+    dislikes: createQuoteDto.dislikes,
+    tag: createQuoteDto.tag,
+    userId: id,
+    // userId : id.userId
+  });
+  console.log(quote)
+
+  return  this.quoteRepository.save(quote);
+}
   
 
   // async findAll() {
@@ -79,7 +83,6 @@ findAll(filter?: { author?: string }): Promise<Quote[]> {
 }
 
 
-
   async findOne(@Param('id') id: string): Promise<Quote> {
     const quote = await this.quoteRepository.findOne({ where: { id } });
     if (!quote) {
@@ -103,7 +106,8 @@ findAll(filter?: { author?: string }): Promise<Quote[]> {
     if (!quote) {
       throw new NotFoundException(`Quote #${id} not found`);
     }
-    return this.quoteRepository.remove(quote);
+    this.quoteRepository.remove(quote);
+    return `Quote with ID ${id} deleted successfully`
   }
 
   // fetch all authors from quote
@@ -208,9 +212,9 @@ private async updateremove_likeReactionCount(id: string, reactionType:string, de
     throw new NotFoundException(`Quote with ID ${id} not found`);
   }
   
-  quote[reactionType] -= decrement;
+  // quote[reactionType] -= decrement;
   
-  await this.quoteRepository.update(id, quote);
+  // await this.quoteRepository.update(id, quote);
 
     // to del likes
     await this.userQuoteReactionRepository.delete({
@@ -235,9 +239,9 @@ private async updateremove_dislikeReactionCount(id: string, reactionType:string,
     throw new NotFoundException(`Quote with ID ${id} not found`);
   }
   
-  quote[reactionType] -= decrement;
+  // quote[reactionType] -= decrement;
   
-  await this.quoteRepository.update(id, quote);
+  // await this.quoteRepository.update(id, quote);
 
 
   // to del dislikes
@@ -280,7 +284,7 @@ async getAllDislikedUsers(id: string): Promise<User[]> {
 
 
 // task scheduler to count the total number of likes and dislikes for a quote 
-@Cron(CronExpression.EVERY_30_SECONDS)
+@Cron(CronExpression.EVERY_MINUTE)        //chsnge this to EVERY_DAY_AT_MIDNIGHT
 async countLikesAndDislikes(): Promise<void> {
   const quotes = await this.quoteRepository.find();
 
@@ -293,18 +297,17 @@ async countLikesAndDislikes(): Promise<void> {
       where: { quoteId: eachQuote.id, dislikes: true },
     });
 
+
+    eachQuote.like = likedCount;
+    eachQuote.dislikes = dislikedCount;
+
     // to display all likes & dislikes of each quotebyId
-    console.log(`likedCount for ${eachQuote.id} =`, likedCount)
-    console.log(`dislikedCount for ${eachQuote.id} =`, dislikedCount)
-    console.log()
+    // comment/comment whenever needed to cross check
+    // console.log(`likedCount for ${eachQuote.id} =`, likedCount)
+    // console.log(`dislikedCount for ${eachQuote.id} =`, dislikedCount)
+    // console.log()
 
-
-    // eachQuote.like = likedCount;
-    // eachQuote.dislikes = dislikedCount;
-    // console.log("-----------------------", eachQuote.like)
-    // console.log("-----------------------", eachQuote.dislikes)
-
-    // await this.quoteRepository.save(quote);
+    await this.quoteRepository.save(eachQuote);
 }
 }
 
