@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import "../css/Authors.css";
+import "./Authors.css";
 
-function Authors() {
+function Authors({isAuthenticated}) {
   const [authors, setAuthors] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [authorQuotes, setAuthorQuotes] = useState([]);
@@ -11,29 +11,21 @@ function Authors() {
 
   const baseURL = import.meta.env.VITE_API_URL;
 
+  // console.log("start------")
 
   useEffect(() => {
     const fetchQuotes = async () => {
       try {
         const response = await axios.get(`${baseURL}/quotes`);
-        // const arrayOfAuthors = response.data;
-
-        
         const arrayOfQuotes = response.data;
 
         if (Array.isArray(arrayOfQuotes) && arrayOfQuotes.length > 0) {
-          // const sortedAuthors = arrayOfAuthors.sort((a, b) =>
-          //   a.localeCompare(b)
-          // );
-
           const uniqueAuthorsSet = new Set(
             arrayOfQuotes.map((quote) => quote.author)
           );
-
           const sortedAuthors = Array.from(uniqueAuthorsSet).sort((a, b) =>
             a.localeCompare(b)
           );
-
 
           setAuthors(sortedAuthors);
           console.log(sortedAuthors);
@@ -54,9 +46,6 @@ function Authors() {
     try {
       const response = await axios.get(`${baseURL}/quotes`);
       const quotesByAuthor = response.data;
-
-      // console.log("----------------",quotesByAuthor)
-
       if (Array.isArray(quotesByAuthor) && quotesByAuthor.length > 0) {
         setAuthorQuotes(quotesByAuthor);
         console.log(quotesByAuthor);
@@ -70,53 +59,66 @@ function Authors() {
       console.log("Error fetching quotes by author:", error);
     }
   };
+  // const userId = localStorage.getItem("userId")
+  // const token = localStorage.getItem("token")
+  // if (userId && token){
+  //   isAuthenticated
+  // }
+
+
+
+
 
   return (
     <>
+    {
+      // isAuthenticated &&
       <div className="scrollable-page">
-        <div className="title-div">Authors</div>
-        <div className="allAuthors">
-          <div className="search-field">
-            <input
-              type="text"
-              placeholder="Enter author's name"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
+      <div className="title-div">Authors</div>
+      <div className="allAuthors">
+        <div className="search-field">
+          <input
+            type="text"
+            placeholder="Enter author's name"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
 
-            <button id="searchAuthor" onClick={handleSearch}>
-              Search
-            </button>
-          </div>
-
-          {authorQuotes.length > 0 && (
-            <div>
-              <h2>Quotes by {searchTerm}</h2>
-              <div className="quotesforauthor">
-                <ul>
-                  {authorQuotes.map((quote, index) => (
-                    <p key={index}>{quote.quote}</p>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          )}
+          <button id="searchAuthor" onClick={handleSearch}>
+            Search
+          </button>
         </div>
 
-        <div className="main-sub">
-          <div className="main-container">
-            {authors.map((author, index) => (
-              <div
-                className="quote-container"
-                key={index}
-                onClick={() => navigate(`/quotes?author=${author}`)}
-              >
-                <p className="quote-message">{author}</p>
-              </div>
-            ))}
+        {authorQuotes.length > 0 && (
+          <div>
+            <h2>Quotes by {searchTerm}</h2>
+            <div className="quotesforauthor">
+              <ul>
+                {authorQuotes.map((quote, index) => (
+                  <p key={index}>{quote.quote}</p>
+                ))}
+              </ul>
+            </div>
           </div>
+        )}
+      </div>
+
+      <div className="main-sub">
+        <div className="main-container">
+          {authors.map((author, index) => (
+            <div
+              className="quote-container"
+              key={index}
+              onClick={() => navigate(`/quotes?author=${author}`)}
+            >
+              <p className="quote-message">{author}</p>
+            </div>
+          ))}
         </div>
       </div>
+    </div>
+    }
+
     </>
   );
 }

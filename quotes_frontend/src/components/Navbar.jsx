@@ -1,14 +1,24 @@
 import React from "react";
+import { Link } from "react-router-dom";
+import "../css/Navbar.css";
 
-function Navbar() {
+function Navbar({ isAuthenticated, setIsAuthenticated }) {
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("userId");
+    setIsAuthenticated(false);
+  };
   return (
-    <div>
-      <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" href="#">
-          Navbar
-        </a>
+    <div className="NavContainer">
+      <nav className="navbar navbar-expand-lg navbar-dark custom-bg-color">
+        <span style={{ fontWeight: "bold" }}>
+          <Link to="/" className="navbar-brand">
+            Software Quotes
+          </Link>
+        </span>
         <button
-          class="navbar-toggler"
+          className="navbar-toggler"
           type="button"
           data-toggle="collapse"
           data-target="#navbarSupportedContent"
@@ -16,63 +26,47 @@ function Navbar() {
           aria-expanded="false"
           aria-label="Toggle navigation"
         >
-          <span class="navbar-toggler-icon"></span>
+          <span className="navbar-toggler-icon"></span>
         </button>
 
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-              <a class="nav-link" href="#">
-                Home <span class="sr-only">(current)</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">
+        <div className="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul className="navbar-nav mr-auto">
+            {isAuthenticated && (
+              <>
+                <li className="nav-item">
+                  <Link to="/" className="nav-link">
+                    Home
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/authors" className="nav-link">
+                    Authors
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/myquotes" className="nav-link">
+                    My Quotes
+                  </Link>
+                </li>
+              </>
+            )}
+
+            <li className="nav-item">
+              <Link to="/quotes" className="nav-link">
                 Quotes
-              </a>
-            </li>
-            {/* <li class="nav-item dropdown">
-              <a
-                class="nav-link dropdown-toggle"
-                href="#"
-                id="navbarDropdown"
-                role="button"
-                data-toggle="dropdown"
-                aria-haspopup="true"
-                aria-expanded="false"
-              >
-                Dropdown
-              </a>
-              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="#">
-                  Action
-                </a>
-                <a class="dropdown-item" href="#">
-                  Another action
-                </a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#">
-                  Something else here
-                </a>
-              </div>
-            </li> */}
-            <li class="nav-item">
-              <a class="nav-link disabled" href="#">
-                Authors
-              </a>
+              </Link>
             </li>
           </ul>
-          <form class="form-inline my-2 my-lg-0">
-            <input
-              class="form-control mr-sm-2"
-              type="search"
-              placeholder="Search"
-              aria-label="Search"
-            />
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
-              Search
-            </button>
-          </form>
+
+          {!isAuthenticated ? (
+            <Link to="/login" className="btn btn my-2 my-sm-0">
+              <button className="btn btn my-2 my-sm-0">Login/Signup</button>
+            </Link>
+          ) : (
+            <Link to="/" className="btn btn my-2 my-sm-0">
+              <button className="btn btn my-2 my-sm-0" onClick={handleLogout}>Logout</button>
+            </Link>
+          )}
         </div>
       </nav>
     </div>

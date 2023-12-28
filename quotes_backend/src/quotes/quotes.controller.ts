@@ -17,16 +17,20 @@ import { SkipThrottle } from '@nestjs/throttler';
 import { JwtAuthGuard } from 'src/auth/guard/jwt.guard';
 
 
-
 @SkipThrottle()
 @Controller('quotes')
 export class QuotesController {
   constructor(private readonly quotesService: QuotesService) {}
 
-  @SkipThrottle({ default: false })
+@SkipThrottle({ default: false })
+// @Get()
+// findAll(@Query('author') author?: string, @Query('tag') tag?: string, @Query('quote') quote?: string) {
+//   return this.quotesService.findAll({ author, tag, quote });
+// }
+
   @Get()
-  findAll(@Query('author') author?: string) {
-    return this.quotesService.findAll({ author });
+  async findAll(@Query() filter?: { author?: string; tag?: string; quote?: string }) {
+    return this.quotesService.findAll(filter);
   }
 
   // @UseGuards(JwtAuthGuard)

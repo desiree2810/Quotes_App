@@ -1,0 +1,91 @@
+.addQuotecontainer{
+    display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh; 
+    /* flex-direction: column; */
+}
+
+.title {
+  text-align: left;
+  font-size: 30px; 
+}
+
+.quote-form-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 10px;
+    width: 9000%; /* Increase width */
+    max-width: 600px;
+    /* margin: 0 auto; */
+    box-shadow: 0 0 10px rgba(2, 1, 1, 0.1);
+  }
+  
+  /* .quote-form-container h1{
+    margin-left:0 ;
+    text-align: left;
+  } */
+
+  .innercontatiner{
+    display:contents ;
+  }
+
+  .input-container {
+    margin-bottom: 10px;
+    width: 100%;
+    text-align: left;
+    font-size: 20px;
+
+  }
+  
+  textarea {
+    width: 100%;
+    padding: 8px; /* Adjust padding */
+    resize: vertical; /* Allow vertical resizing of the textarea */
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 5px;
+  }
+  
+  input,
+  textarea {
+    font-size: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box; /* Include padding and border in the total width/height */
+  }
+  
+  .button-container {
+    display: flex;
+    justify-content: center;
+    width: 50%;
+    margin-top: 10px; /* Add margin at the top */
+  }
+  
+  .save-button{
+    flex: 1;
+    width: 60px;
+    height: 40px;
+    margin: 0 5px;
+    font-size: 15px;
+    background-color: rgb(119, 227, 191);
+    border-radius: 10px;
+    border:none
+  }
+  .cancel-button {
+    flex: 1;
+    width: 60px;
+    height: 40px;
+    margin: 0 5px;
+    font-size: 15px;
+    border-radius: 10px;
+    border: none;
+    background-color: rgb(240, 130, 109);
+  }
+  

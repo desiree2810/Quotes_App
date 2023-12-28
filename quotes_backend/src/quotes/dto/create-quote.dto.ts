@@ -10,12 +10,12 @@ export class CreateQuoteDto {
     @IsString()
     author: string;
 
-    @IsNotEmpty()
-    @IsNumber()
+    // @IsNotEmpty()
+    // @IsNumber()
     like: number;
 
-    @IsNotEmpty()
-    @IsNumber()
+    // @IsNotEmpty()
+    // @IsNumber()
     dislikes: number;
 
     @IsNotEmpty()

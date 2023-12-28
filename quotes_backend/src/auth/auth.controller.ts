@@ -1,12 +1,10 @@
 import { Controller, Post, Req, UseGuards,Body, ValidationPipe,  HttpException,HttpStatus} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { AuthGuard } from '@nestjs/passport';
-import { SkipThrottle } from '@nestjs/throttler';
 import { User } from 'src/user/entities/user.entity';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { UserService } from 'src/user/user.service';
 
-@SkipThrottle()
 @Controller("auth")
 export class AuthController {
 

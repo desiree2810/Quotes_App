@@ -34,12 +34,15 @@ export class QuotesService {
 
  
 create(@Body() createQuoteDto: CreateQuoteDto, id:any){
+
+  let likecount = 0;
+  let dislikecount = 0;
   
   const quote = this.quoteRepository.create({
     quote: createQuoteDto.quote,
     author: createQuoteDto.author,
-    like: createQuoteDto.like,
-    dislikes: createQuoteDto.dislikes,
+    like: likecount,
+    dislikes:dislikecount,
     tag: createQuoteDto.tag,
     userId: id,
     // userId : id.userId
@@ -60,22 +63,47 @@ create(@Body() createQuoteDto: CreateQuoteDto, id:any){
 
 
   // find all quotes by author using Query Parameters
-findAll(filter?: { author?: string }): Promise<Quote[]> {
+// findAll(filter?: { author?: string, tag?: string, quote?: string }): Promise<Quote[]> {
+//   if (!filter) {
+//     return this.quoteRepository.find();
+//   }
+
+//   const whereClause: any = {};
+
+//   if (filter.author) {
+//     whereClause.author = filter.author;
+//   }
+//   if (filter.tag){
+//     whereClause.tag = filter.tag;
+//   }
+//   if(filter.quote){
+//     whereClause.quote = filter.quote;
+//   }
+ 
+//   console.log("quote =", whereClause)
+
+//   return this.quoteRepository.find({
+//     where: whereClause,
+//   });
+
+
+// }
+async findAll(filter?: { author?: string; tag?: string; quote?: string }): Promise<Quote[]> {
   if (!filter) {
     return this.quoteRepository.find();
   }
 
   const whereClause: any = {};
 
-  // if (filter.quote) {
-  //   whereClause.quote = filter.quote;
-  // }
-
   if (filter.author) {
     whereClause.author = filter.author;
   }
-
-  console.log("quote =", whereClause)
+  if (filter.tag) {
+    whereClause.tag = filter.tag;
+  }
+  if (filter.quote) {
+    whereClause.quote = filter.quote;
+  }
 
   return this.quoteRepository.find({
     where: whereClause,
@@ -304,9 +332,9 @@ async countLikesAndDislikes(): Promise<void> {
     eachQuote.dislikes = dislikedCount;
 
     // to display all likes & dislikes of each quotebyId
-    console.log(`likedCount for ${eachQuote.id} =`, likedCount)
-    console.log(`dislikedCount for ${eachQuote.id} =`, dislikedCount)
-    console.log()
+    // console.log(`likedCount for ${eachQuote.id} =`, likedCount)
+    // console.log(`dislikedCount for ${eachQuote.id} =`, dislikedCount)
+    // console.log()
 
 
     // eachQuote.like = likedCount;
