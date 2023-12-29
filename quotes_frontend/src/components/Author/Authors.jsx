@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "./Authors.css";
+import authorService from "../../services/authorService";
 
 function Authors({isAuthenticated}) {
   const [authors, setAuthors] = useState([]);
@@ -9,23 +10,18 @@ function Authors({isAuthenticated}) {
   const [authorQuotes, setAuthorQuotes] = useState([]);
   const navigate = useNavigate(); 
 
-  const baseURL = import.meta.env.VITE_API_URL;
-
-  // console.log("start------")
+  // const baseURL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     const fetchQuotes = async () => {
       try {
-        const response = await axios.get(`${baseURL}/quotes`);
+        // const response = await axios.get(`${baseURL}/quotes`);
+        const response = await authorService.authorsList();
         const arrayOfQuotes = response.data;
 
         if (Array.isArray(arrayOfQuotes) && arrayOfQuotes.length > 0) {
-          const uniqueAuthorsSet = new Set(
-            arrayOfQuotes.map((quote) => quote.author)
-          );
-          const sortedAuthors = Array.from(uniqueAuthorsSet).sort((a, b) =>
-            a.localeCompare(b)
-          );
+          const uniqueAuthorsSet = new Set(arrayOfQuotes.map((quote) => quote.author));
+          const sortedAuthors = Array.from(uniqueAuthorsSet).sort((a, b) =>a.localeCompare(b));
 
           setAuthors(sortedAuthors);
           console.log(sortedAuthors);
@@ -44,7 +40,8 @@ function Authors({isAuthenticated}) {
     e.preventDefault();
 
     try {
-      const response = await axios.get(`${baseURL}/quotes`);
+      // const response = await axios.get(`${baseURL}/quotes`);
+      const response = await authorService.authorsList();
       const quotesByAuthor = response.data;
       if (Array.isArray(quotesByAuthor) && quotesByAuthor.length > 0) {
         setAuthorQuotes(quotesByAuthor);

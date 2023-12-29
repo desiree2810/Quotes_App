@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import axios from "axios";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import authService from "../../services/authService";
 
 const Signup = () => {
 
@@ -26,13 +27,12 @@ const Signup = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post("http://localhost:3000/auth/sign-up", registerformData);
-
+      const response = await authService.signup(registerformData)
+      
       if (response.status === 201) {
         console.log(registerformData)
         console.log("User registered successfully");
         notify()
-        // Redirect or perform any other action upon successful registration
       } else {
         console.error("Failed to register user");
       }
@@ -68,7 +68,7 @@ const Signup = () => {
           <div>
               <ToastContainer />
             <div className="buttonset">
-              <button type="submit" className="btn btn-primary mr-2 px-0.5 py-2">Signup</button>
+              <button type="submit" className="btn btn-primary mr-5 px-0.5 py-2">Signup</button>
               <Link to="/login">
                 <button className="btn btn-warning px-3 py-2">Login</button>
               </Link>

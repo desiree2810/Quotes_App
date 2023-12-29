@@ -1,17 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import authService from "../../services/authService";
 
-
 const Login = ({ setIsAuthenticated }) => {
   const navigateToHomepage = useNavigate();
+
   const [loginformData, setLoginFormData] = useState({
     email: "",
     password: "",
   });
 
-  const baseURL = import.meta.env.VITE_API_URL;
+  // const baseURL = import.meta.env.VITE_API_URL;
 
   const handleChange = (e) => {
     setLoginFormData({
@@ -24,16 +24,17 @@ const Login = ({ setIsAuthenticated }) => {
     e.preventDefault();
 
     try {
-      const response = await axios.post(
-        `${baseURL}/auth/sign-in`,
-        loginformData
-      );
-      // const response = await authService.login(loginformData);
+      // const response = await axios.post(`${baseURL}/auth/sign-in`,loginformData);
+      const response = await authService.login(loginformData)
 
+      console.log(response)
       if (response.status === 201) {
+        // to store token in localstorage
         const token = response.data.token;
         localStorage.setItem('token', token);
         console.log(`User logged in successfully with token = ${token}`)
+
+        // to store userId in localstorage
         const encodedPayload =JSON.parse(atob(token.split('.')[1])) ;
         const encodedPayload_userId = encodedPayload.userId;
         console.log(`User logged in successfully with userId = ${encodedPayload_userId}`);
@@ -46,9 +47,19 @@ const Login = ({ setIsAuthenticated }) => {
         console.error("Failed to login user");
       }
     } catch (error) {
-      console.error("Error during login:", error);
+      console.error("Error during login:", error.response ? error.response.data : error.message);
     }
+    
   };
+
+  useEffect(() =>{
+    const storedToken = localStorage.getItem('token');
+    const storedUserId = localStorage.getItem('userId');
+    if (storedToken && storedUserId) {
+      setIsAuthenticated(true);
+      navigateToHomepage("/");
+    }
+  },[])
 
   return (
     <div

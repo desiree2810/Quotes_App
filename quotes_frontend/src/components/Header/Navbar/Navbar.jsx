@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import "../css/Navbar.css";
+import "./Navbar.css";
 
 function Navbar({ isAuthenticated, setIsAuthenticated }) {
 
@@ -31,6 +31,7 @@ function Navbar({ isAuthenticated, setIsAuthenticated }) {
 
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav mr-auto">
+
             {isAuthenticated && (
               <>
                 <li className="nav-item">
@@ -63,7 +64,7 @@ function Navbar({ isAuthenticated, setIsAuthenticated }) {
               <button className="btn btn my-2 my-sm-0">Login/Signup</button>
             </Link>
           ) : (
-            <Link to="/" className="btn btn my-2 my-sm-0">
+            <Link to="/quotes" className="btn btn my-2 my-sm-0">
               <button className="btn btn my-2 my-sm-0" onClick={handleLogout}>Logout</button>
             </Link>
           )}
