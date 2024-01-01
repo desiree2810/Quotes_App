@@ -1,138 +1,76 @@
-.search-field {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    padding: 2rem;
-}
-
-search-field button{
-    margin: 1rem;
-    padding: 0.7rem;
-}
-
-.searchAuthor {
-    margin: 1rem;
-    padding: 100rem;
-}
-
-.input-wrapper {
-    display: flex;
-    align-items: center;
-    background-color:rgb(255, 255, 255) ;
-    height: 2.5rem;
-    width: 60%;
-    border-radius: 2rem;
-    padding: 0 15px;
-    box-shadow: 0px 0px 8px #ddd;
-    border:1px solid  #542f8f;
-    
+body, h1, p, ul {
+    margin: 0;
+    padding: 0;
   }
   
-  input {
-    margin-top: 10px;
-    background-color: transparent;
-    height: 100%;
+  body {
+    background-color: #f8f8f8;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  .scrollable-page {
+    /* max-width: 800px; */
+    margin: 0 auto;
+    padding: 20px;
+    width: 90%;   
+  }
+  
+  .title-div {
+    text-align: center;
+    color: #333;
+    font-size: 32px;
+    margin-bottom: 20px;
+  }
+  
+  .allAuthors {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border: 2px solid #e3e9e3; 
+    margin-top: 20px; 
+  }
+  
+  .search-field {
+    margin-bottom: 20px;
+  }
+  
+  input[type="text"] {
     width: 100%;
-    font-size: 1rem;
-    color: rgb(0, 0, 0);
-    border:4px solid  #59993b;
-    border-radius: 25px;
-    padding: 1em;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #050505;
+    border-radius: 5px;
+    box-sizing: border-box;
   }
   
-  input:focus {
-    outline: none;
-    border:4px solid  #59993b;
-    border-radius: 25px;
-    padding: 1em;
-
+  .autocomplete-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 10px;
   }
   
-  #search-icon {
-    color: yellowgreen;
+  .clickable-author {
+    cursor: pointer;
+    padding: 15px;
+    background-color: #c2f274;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    transition: background-color 0.3s ease;
   }
   
+  .clickable-author:hover {
+    background-color: #f5f5f5;
+  }
   
-  * {
-	box-sizing: border-box;
-}
-
-
-body {
-	display: grid;
-	grid-template:
-		"search" minmax(300px, 50vh)
-		"results" minmax(20%, auto)
-		/ 1fr;
-	margin: 0;
-	font: 24px/1.5 system-ui, sans-serif;
-}
-
-.search-name{
-    width:20px;
-    height:5px;
-    border: 3px;
-    border-radius: 10px;
-    background-color: #59993b;
-    
-}
-
-
-#search input {
-	display: grid;
-	display: block;
-	grid-area: search;
-	-webkit-appearance: none;
-	appearance: none;
-	width: 100%;
-	height: 100%;
-	background: none;
-	padding: 0 30px 0 60px;
-	border: none;
-	border-radius: 100px;
-	font: 24px/1 system-ui, sans-serif;
-	outline-offset: -8px;
-}
-
-
-#searchAuthor{
-    width:100px;
-    color: #ffffff;
-
-    border: 3px solid green;
-    border-radius: 10px;
-    background-color: #4b922d;
-    padding: 0.4rem;
-    margin: 1rem 1rem;
-    margin-top: 1.2rem;
-}
-#searchAuthor button:hover{
-    border: 3px solid rgb(0, 255, 0);
-}
-
-
-#results {
-	grid-area: results;
-	background: hsl(0, 0%, 95%);
-}
-
-.main-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100%;   
-}
-
-.quotesforauthor{
-    border: 1px solid hsl(84, 76%, 47%);
-    border-radius: 1rem;
-    margin: 1rem 1.7rem;
-    padding: 1rem;
-}
-
-.quote-container{
-    border: 1px solid hsl(84, 76%, 47%);
-    border-radius: 1rem;
-    margin: 1rem 1.7rem;
-}
+  .quotesforauthor {
+    margin-top: 20px;
+  }
+  
+  .quotesforauthor p {
+    margin-bottom: 15px;
+    font-size: 18px;
+    line-height: 1.6;
+  }
+  

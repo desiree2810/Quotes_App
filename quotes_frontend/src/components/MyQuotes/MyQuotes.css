@@ -1,0 +1,29 @@
+.outer-div {
+    margin: 15px 70px;
+    font-size: 25px;
+  }
+    
+  .main-div {
+    height: 100vh;
+    margin: 10px 0px;
+    padding: 10px;
+    overflow-y: auto; 
+    box-shadow: 0 4px 8px rgba(0.2, 0, 0, 0.5);
+  }
+
+  .navbar-div {
+    font-size: 17px;
+  }
+
+  .active-tab {
+    background-color: #79ba40; 
+    color: white; 
+  }
+
+.quotes-display{
+    margin-top: 15px;
+    /* border: #79ba40 solid 2px; */
+    padding: 10px;
+    height: 400px;
+}
+  

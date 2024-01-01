@@ -4,6 +4,14 @@ import "./Navbar.css";
 
 function Navbar({ isAuthenticated, setIsAuthenticated }) {
 
+  let token = localStorage.getItem("token");
+  let userId = localStorage.getItem("userId");
+  console.log(token,"---------", userId);
+
+  if (token && userId){
+    setIsAuthenticated(true);
+  }
+
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("userId");
@@ -61,7 +69,7 @@ function Navbar({ isAuthenticated, setIsAuthenticated }) {
 
           {!isAuthenticated ? (
             <Link to="/login" className="btn btn my-2 my-sm-0">
-              <button className="btn btn my-2 my-sm-0">Login/Signup</button>
+              <button className="btn btn my-2 my-sm-0">Login</button>
             </Link>
           ) : (
             <Link to="/quotes" className="btn btn my-2 my-sm-0">

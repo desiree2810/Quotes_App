@@ -1,99 +1,16 @@
 @import url(https://fonts.googleapis.com/css?family=Open+Sans:400italic);
 
-.scrollable-page {
-        height: 100vh;
-        overflow-y: auto; /* Enable vertical scrolling */
-        overflow-x: hidden; /* Disable horizontal scrolling */
-        border: black;
-        background-color: rgb(248, 248, 248);
-        padding: 40px 80px;
-  }
 
-  .main-sub{
-    border:2px solid  rgb(195, 189, 189);
-    padding : 30px 150px;
-    background-color: rgb(255, 255, 255);
-  }
-  .title-div{
-    text-align: center;
-    color: black;
-    font-size: 34px;
-    font-weight: bolder;
+/* new css rest above can be removed: */
 
-  }
-  
-  .main-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    /* border: solid 3px black */
+.title-div{
+  text-align: center;
+  color: black;
+  font-size: 34px;
+  font-weight: bolder;
 
-  }
-  
-  .quote-container {
-    /* border: 1px solid #cb1808; */
-    padding: 20px;
-    margin-bottom: 20px;
-    width: 55vw;
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-    justify-content: space-between;
-  }
-  
-  .quote-message {
-    margin-bottom: 10px;
-    margin-left: 10px;
-    border: #0860cb;
-    flex-grow: 1
-  }
-
-  .quote-button {
-    height: 40px;
-    width: auto;
-    background-color: rgb(70, 70, 204);
-    color: white;
-    border-radius: 10px;
-  }
-  
-
-  .quote-container .authorbutton{
-    background-color: steelblue;
-    justify-content: right;
-  }
-
-  .userAdded {
-    margin-left: 0.4rem; 
-  }
-
-  .addQuoteBtn{
-    background-color: #e99b2d;
-    color: white;
-    border-radius: 5px;
-    align-items: center;
-  }
-
-
-/* .search-container{
-  display: flex;
-  flex-direction: row;
-} */
-
-.button-container .search-container{
-  display: flex;
-  flex-direction: row;
-  margin-left: 0;
-  padding: 0;
 }
 
-
-
-
-
-
-/* blockquote */
 blockquote{
   font-size: 1em;
   width:60%;
@@ -122,11 +39,195 @@ blockquote::after{
   content: '';
 }
 
-blockquote span{
-  display:block;
+blockquote .mainContainer{
+  /* background-color: #0860cb; */
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.QuoteReactions{
+  padding-top: 0.6rem;
+  font-size: medium;
+}
+
+
+blockquote .authorNameContainer{
+  /* background-color: #0860cb; */
+  /* display:block; */
+  position: absolute;
   color:#333333;
   font-style: normal;
   font-weight: bold;
   margin-top:1em;
   font-size: medium;
+  bottom: 0;
+  right: 0;
+  padding: 0.7rem;
+}
+blockquote .userAdded {
+  position: absolute;
+  margin-left: 0.4rem; 
+  font-size: 1.7rem;
+  top: 0;
+  right: 0;
+  padding: 0.7rem;
+}
+
+button{
+  border: none;
+}
+
+button:hover{
+  border: none;
+  background-color: #78C0A8;
+}
+
+
+
+  .auth-container {
+    margin-top: 40px;
+    display: flex;
+    align-items: center;
+    /* justify-content: space-between; */
+    padding: 5px; 
+    background-color: #ffffff; 
+    border-radius: 8pxrgb(255, 255, 255)d border-radius for rounded corners 
+  }
+  
+  .Searchtxt {
+    font-size: 18px;
+    margin-left: 10px;
+    margin-right: 5px; 
+  }
+  
+  .form-control {
+    justify-content: space-between;
+    margin-left: 2px;
+    height: 35px; 
+    margin-right:50px ;
+  }
+  
+  .btn {
+    margin-right: 5px;
+    height: 35px; 
+    width:69px;
+  }
+  
+  .addQuoteBtn {
+    margin-left: 50px;
+    background-color: #d99a12; 
+    color: white;
+    border-radius: 8px;
+    padding: 5px 10px; 
+    text-decoration: none; 
+    width: 120px;
+  }
+
+  .searchbtn{
+    background-color: #d99a12;
+    border: none;
+    color: white;
+
+  }
+  .refbtn{
+    background-color: #d99a12;
+    border: none;
+    color: white;
+  }
+  
+  .searchbtn:hover,
+  .refbtn:hover,
+  .addQuoteBtn:hover {
+    background-color: #77c51e; 
+    color: #fefefe;
+  }
+  
+  .filter-div{
+    margin-right: 5px;
+  }
+
+
+
+
+
+
+
+  .tooltip {
+    position: absolute;
+    background-color: white;
+    border: 1px solid #ccc;
+    padding: 8px;
+    z-index: 1;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .tooltip ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .tooltip li {
+    margin-bottom: 5px;
+  }
+  
+
+
+
+
+  /* Styling for the dropdown container */
+.user_reactioncount {
+  display: inline-block;
+  position: relative;
+}
+
+/* Styling for the dropdown button */
+.countbtn {
+  background-color: #007bff; /* Set your preferred background color */
+  color: #ffffff; /* Set your preferred text color */
+  border: 1px solid #007bff; /* Set your preferred border color */
+  padding: 8px 16px; /* Adjust padding as needed */
+  border-radius: 4px; /* Adjust border-radius as needed */
+  cursor: pointer;
+}
+
+/* Styling for the dropdown menu */
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1000;
+  display: none;
+  float: left;
+  min-width: 160px;
+  padding: 8px 0;
+  margin: 2px 0 0;
+  font-size: 14px;
+  text-align: left;
+  background-color: #ffffff; /* Set your preferred background color */
+  border: 1px solid rgba(0, 0, 0, 0.15); /* Set your preferred border color */
+  border-radius: 4px; /* Adjust border-radius as needed */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+}
+
+/* Styling for the dropdown menu items */
+.dropdown-menu p {
+  display: block;
+  width: 100%;
+  padding: 8px 16px; /* Adjust padding as needed */
+  clear: both;
+  color: #333333; /* Set your preferred text color */
+  margin: 0; /* Remove default margin */
+}
+
+/* Hover effect for dropdown items */
+.dropdown-menu p:hover {
+  background-color: #f8f9fa; /* Set your preferred hover background color */
+}
+
+/* Active/focused state for dropdown items */
+.dropdown-menu p:focus, .dropdown-menu p:active {
+  background-color: #e9ecef; /* Set your preferred active background color */
 }

@@ -17,7 +17,7 @@ import { UserModule } from 'src/user/user.module';
     {
       // name: 'quotesAccess', 
       ttl: 86400000, // 24 hours in milliseconds   86400000
-      limit: 1000, // 10 requests per 24 hours        10
+      limit: 5000, // 10 requests per 24 hours        10
     },
   ])],
   controllers: [QuotesController],

@@ -114,7 +114,8 @@ async fetchAllQuotesDislikedByUser(id: string) {
     throw new NotFoundException(`No users found who disliked the quote with ID #${id}`);
   }
 
-  return ALlDislikedQuotes.map((ALlDislikedQuote) => ALlDislikedQuote.quote.quote);
+  // return ALlDislikedQuotes.map((ALlDislikedQuote) => ALlDislikedQuote.quote.quote);
+  return ALlDislikedQuotes.map((ALlDislikedQuote) => ALlDislikedQuote.quote);
 }
 
 
@@ -130,7 +131,9 @@ async fetchAllQuotesLikedByUser(id: string) {
     throw new NotFoundException(`No users found who liked the quote with ID #${id}`);
   }
 
-  return ALLlikedQuotes.map((ALLlikedQuote) => ALLlikedQuote.quote.quote);
+  // return ALLlikedQuotes;
+  // return ALLlikedQuotes.map((ALLlikedQuote) => ALLlikedQuote.quote.quote);
+  return ALLlikedQuotes.map((ALLlikedQuote) => ALLlikedQuote.quote);
 }
 
 

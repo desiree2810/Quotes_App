@@ -342,7 +342,7 @@ async countLikesAndDislikes(): Promise<void> {
     // console.log("-----------------------", eachQuote.like)
     // console.log("-----------------------", eachQuote.dislikes)
 
-    // await this.quoteRepository.save(quote);
+    await this.quoteRepository.save(eachQuote);
 }
 }
 

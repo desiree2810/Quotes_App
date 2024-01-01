@@ -21,6 +21,7 @@ return(
         <Route path="/authors" element={<ProtectedRoute Component={Authors}/> } />
         <Route path="/addquote" element={<ProtectedRoute Component={AddQuoteScreen}/> } />
         <Route path="/myquotes" element={<ProtectedRoute Component={MyQuotes}/> } />
+        {/* <Route path="/myquotes" element={<Component={MyQuotes}/> } /> */}
         <Route path="*" element={<PageNotFound/> } />
       </Routes>
 )

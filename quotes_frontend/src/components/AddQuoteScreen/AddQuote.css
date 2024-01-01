@@ -3,7 +3,6 @@
   align-items: center;
   justify-content: center;
   height: 100vh; 
-    /* flex-direction: column; */
 }
 
 .title {
@@ -19,16 +18,12 @@
     border: 1px solid #ccc;
     padding: 10px;
     border-radius: 10px;
-    width: 9000%; /* Increase width */
+    width: 9000%; 
     max-width: 600px;
     /* margin: 0 auto; */
     box-shadow: 0 0 10px rgba(2, 1, 1, 0.1);
   }
   
-  /* .quote-form-container h1{
-    margin-left:0 ;
-    text-align: left;
-  } */
 
   .innercontatiner{
     display:contents ;
@@ -44,8 +39,8 @@
   
   textarea {
     width: 100%;
-    padding: 8px; /* Adjust padding */
-    resize: vertical; /* Allow vertical resizing of the textarea */
+    padding: 8px; 
+    resize: vertical; 
   }
   
   label {
@@ -58,14 +53,14 @@
     font-size: 15px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    box-sizing: border-box; /* Include padding and border in the total width/height */
+    box-sizing: border-box; 
   }
   
   .button-container {
     display: flex;
     justify-content: center;
     width: 50%;
-    margin-top: 10px; /* Add margin at the top */
+    margin-top: 10px; 
   }
   
   .save-button{
@@ -87,5 +82,24 @@
     border-radius: 10px;
     border: none;
     background-color: rgb(240, 130, 109);
+  }
+  
+
+  .error-message {
+    color: red;
+    font-size: 14px;
+    margin-top: 5px;
+  }
+  
+
+  .success-toast {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    background-color: #4caf50;
+    color: white;
+    padding: 15px;
+    border-radius: 5px;
+    display: inline-block;
   }
   
