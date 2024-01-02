@@ -12,9 +12,19 @@ function Navbar({ isAuthenticated, setIsAuthenticated }) {
     setIsAuthenticated(true);
   }
 
+  // const handleLogout = () => {
+  //   localStorage.removeItem("token");
+  //   localStorage.removeItem("userId");
+  //   setIsAuthenticated(false);
+  // };
+
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("userId");
+    localStorage.removeItem("likedQuotes")
+    localStorage.removeItem("addedQuotes")
+    localStorage.removeItem("dislikedQuotes")
+    localStorage.removeItem("existingQuotes")
     setIsAuthenticated(false);
   };
   return (

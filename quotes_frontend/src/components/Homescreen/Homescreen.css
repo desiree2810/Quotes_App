@@ -4,7 +4,21 @@
   align-items: center;
   text-align: center;
   height: 90vh;
-  /* background-color: rgb(255, 255, 255); */
 }
 
+.centerContent {
+  border: 1px solid rgb(170, 220, 18);
+  padding: 3rem;
+  border-radius: 1rem;
+  position: relative;
+  font-style:italic;
+  font-size: large;
+}
 
+.authorContent {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  padding: 1rem;
+  font-size: small;
+}

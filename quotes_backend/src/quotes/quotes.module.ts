@@ -16,8 +16,8 @@ import { UserModule } from 'src/user/user.module';
   imports: [TypeOrmModule.forFeature([Quote,UserQuoteReaction, User]), ScheduleModule.forRoot(), UserModule, ThrottlerModule.forRoot([
     {
       // name: 'quotesAccess', 
-      ttl: 86400000, // 24 hours in milliseconds   86400000
-      limit: 5000, // 10 requests per 24 hours        10
+      ttl: 30, // 24 hours in milliseconds   86400000
+      limit: 50000, // 10 requests per 24 hours        10
     },
   ])],
   controllers: [QuotesController],

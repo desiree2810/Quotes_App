@@ -129,12 +129,23 @@ async findAll(filter?: { author?: string; tag?: string; quote?: string }): Promi
     return await this.quoteRepository.save(quote);
   }
 
+  // async remove(id: string) {
+  //   const quote = await this.findOne(id);
+  //   if (!quote) {
+  //     throw new NotFoundException(`Quote #${id} not found`);
+  //   }
+  //   this.quoteRepository.remove(quote);
+  //   return `Quote with ID ${id} deleted successfully`
+  // }
+
   async remove(id: string) {
     const quote = await this.findOne(id);
     if (!quote) {
       throw new NotFoundException(`Quote #${id} not found`);
     }
-    this.quoteRepository.remove(quote);
+
+    await this.userQuoteReactionRepository.delete({ quoteId: id }); //delete from userQuoteReactionRepository first
+    await this.quoteRepository.remove(quote);   //then delete from quoteRepository 
     return `Quote with ID ${id} deleted successfully`
   }
 
