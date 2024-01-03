@@ -188,8 +188,20 @@ async getAllTagsByQuote() {
 
 //increment count by 1 for liked quote
 async likeQuote(id: string, user_id:string){
+
+  // check if like exists
+    const existingLike = await this.userQuoteReactionRepository.findOne({
+      where: { quoteId: id, userId: user_id, like: true },
+    });
+  
+    if (existingLike) {
+      throw new Error(`User ${user_id} has already liked the quote with ID ${id}`);
+    }
+
+    // if like doesnt exist then proceed further
   await this.updatelikeReactionCount(id, 'like' , 1, user_id);
 }
+
 
 private async updatelikeReactionCount(id: string, reactionType:string, increment: number, userId:string) {
   const quote = await this.quoteRepository.findOne({where:{id:id}});
@@ -213,8 +225,28 @@ private async updatelikeReactionCount(id: string, reactionType:string, increment
 
 
 //increment count by 1 for disliked quote
+//increment count by 1 for disliked quote
 async dislikeQuote(id: string, user_id:string){
-  await this.updatedislikeReactionCount(id, 'dislikes' , 1, user_id);
+
+  // Check if the user has already liked the quote
+  const existingLike = await this.userQuoteReactionRepository.findOne({
+   where: { quoteId: id, userId: user_id, like: true  },
+ });
+
+ if (existingLike) {
+   throw new Error(`User ${user_id} has already reacted to the quote with ID ${id} (only one reaction can be performed per quote)` );
+ } else{
+   // check if dislike exists
+   const existingDislike = await this.userQuoteReactionRepository.findOne({
+     where: { quoteId: id, userId: user_id, dislikes: true },
+   });
+ 
+   if (existingDislike) {
+     throw new Error(`User ${user_id} has already disliked the quote with ID ${id}`);
+   }
+   // if dislike doesnt exist then proceed further
+ await this.updatedislikeReactionCount(id, 'dislikes' , 1, user_id);
+ }
 }
 
 private async updatedislikeReactionCount(id: string, reactionType:string, increment: number, userId:string) {

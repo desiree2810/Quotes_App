@@ -103,3 +103,22 @@
     display: inline-block;
   }
   
+
+  .addQuotecontainer .quote-form-container .input-container ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.addQuotecontainer .quote-form-container .input-container li {
+  display: inline-block;
+  margin-right: 5px;
+  background-color: #7bc531;
+  color: whitesmoke;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+.addQuotecontainer .quote-form-container .input-container input {
+  margin-top: 5px;
+}

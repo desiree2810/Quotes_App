@@ -259,11 +259,11 @@ const Login = ({ setIsAuthenticated }) => {
             <div className="buttonset">
               {/* <small style={{ fontSize: "0.7rem" }}>Already have an account? </small>
             <a href="#" style={{ color: "blue", fontSize: 'small', marginLeft: '5px' }}>Login</a> */}
-              <button type="submit" className="btn btn-primary mr-5 px-3 py-2">
+              <button type="submit" className="btn btn-primary mr-5 px-3 ">
                 Login
               </button>
               <Link to="/signup">
-                <button className="btn btn-warning px-1 py-2">Signup</button>
+                <button className="btn btn-warning px-1 ">Signup</button>
               </Link>
             </div>
           </div>

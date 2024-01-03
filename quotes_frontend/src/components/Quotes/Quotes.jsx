@@ -339,8 +339,6 @@
 //     }
 //   };
 
-
-  
 //     // get all users who liked the quotes
 //     const getLikedUsers = async (quoteId) => {
 //       if (token && userId) {
@@ -688,21 +686,9 @@
 
 // export default Quotes;
 
-
-
-
-
-
-
-
-
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import {
-  useLocation,
-  Link,
-  useNavigate,
-} from "react-router-dom";
+import { useLocation, Link, useNavigate } from "react-router-dom";
 import "./Quotes.css";
 import {
   faThumbsDown,
@@ -710,6 +696,7 @@ import {
   faUserPlus,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import quoteService from "../../services/quoteService";
 
 function Quotes({ isAuthenticated }) {
   const [quotes, setQuotes] = useState([]);
@@ -720,6 +707,8 @@ function Quotes({ isAuthenticated }) {
 
   const [likeReactionUsers, setLikeReactionUsers] = useState([]);
   const [dislikeReactionUsers, setDislikeReactionUsers] = useState([]);
+
+  const [allUserReactionsList, setAllUserReactionsList] = useState([]);
 
   const baseURL = import.meta.env.VITE_API_URL;
   const navigate = useNavigate();
@@ -789,205 +778,174 @@ function Quotes({ isAuthenticated }) {
   let userId = localStorage.getItem("userId");
   // console.log(token, "---------", userId);
 
+  // to like a quote
   const likeQuote = async (quoteId) => {
-    if (token && userId) {
-      const headers = {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      };
+    try {
+      if (token && userId) {
+        const response = await quoteService.likeQuote(quoteId, token);
+        console.log("response.data = ", response);
 
-      const response = await axios.patch(
-        `${baseURL}/quotes/${quoteId}/like/up`,
-        {},
-        { headers }
-      );
-      console.log("response.data = ", response.data);
+        
+      }
+    } catch (error) {
+      console.error("Error liking quote:", error);
     }
   };
 
   // to dislike a quote
   const dislikeQuote = async (quoteId) => {
-    if (token && userId) {
-      const headers = {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      };
-
-      const response = await axios.patch(
-        `${baseURL}/quotes/${quoteId}/dislike/up`,
-        {},
-        { headers }
-      );
-      console.log("response.data = ", response.data);
+    try {
+      if (token && userId) {
+        const response = await quoteService.dislikeQuote(quoteId, token);
+        console.log("response.data = ", response);
+      }
+    } catch (error) {
+      console.error("Error disliking quote:", error);
     }
   };
 
   // get all users who liked the quotes
   const getLikedUsers = async (quoteId) => {
-    if (token && userId) {
-      const headers = {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      };
+    try {
+      if (token && userId) {
+        const response = await quoteService.getLikedUsers(quoteId, token);
+        setLikeReactionUsers([]);
+        setLikeReactionUsers(response);
+        getDislikedUsers(quoteId);
 
-      const response = await axios.get(
-        `${baseURL}/quotes/${quoteId}/like/users`,
-        { headers }
-      );
-      console.log("liked users = ", response.data.users);
-      setLikeReactionUsers(response.data.users);
+        // Open the modal when the data is fetched
+        const modalButton = document.querySelector(
+          '[data-target="#exampleModalCenter"]'
+        );
 
-      // Open the modal when the data is fetched
-      const modalButton = document.querySelector(
-        '[data-target="#exampleModalCenter"]'
-      );
-
-      if (modalButton) {
-        modalButton.click();
+        if (modalButton) {
+          modalButton.click();
+          console.log(likeReactionUsers, "liked state");
+          console.log(dislikeReactionUsers, "disliked state");
+        }
       }
-
+    } catch (error) {
+      console.error("Error to get all users: ", error);
     }
-    console.log(likeReactionUsers, "state");
-
   };
 
   // get all users who disliked the quotes
   const getDislikedUsers = async (quoteId) => {
-    if (token && userId) {
-      const headers = {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      };
+    try {
+      if (token && userId) {
+        const response = await quoteService.getDislikedUsers(quoteId, token);
+        // setLikeReactionUsers([]);
+        setDislikeReactionUsers([]);
+        setDislikeReactionUsers(response);
 
-      const response = await axios.get(
-        `${baseURL}/quotes/${quoteId}/dislike/users`,
-        { headers }
-      );
-      console.log("disliked users = ", response.data);
-      setDislikeReactionUsers(response.data);
+        // Open the modal when the data is fetched
+        const modalButton = document.querySelector(
+          '[data-target="#exampleModalCenter"]'
+        );
 
-      // Open the modal when the data is fetched
-      const modalButton = document.querySelector(
-        '[data-target="#exampleModalCenter"]'
-      );
-      if (modalButton) {
-        modalButton.click();
+        if (modalButton) {
+          modalButton.click();
+          console.log(likeReactionUsers, "liked state");
+          console.log(dislikeReactionUsers, "disliked state");
+        }
       }
+    } catch (error) {
+      console.error("Error to get all users: ", error);
     }
-
-    // if (!token || !userId) {
-    //   const headers = {
-    //     "Content-Type": "application/json",
-    //     Authorization: `Bearer ${token}`,
-    //   };
-
-    //   const response = await axios.get(
-    //     `${baseURL}/quotes/${quoteId}/dislike/users`,
-    //     { headers }
-    //   );
-    //   console.log("disliked users = ", response.data);
-    //   setDislikeReactionUsers(response.data);
-
-    //   // Open the modal when the data is fetched
-    //   const modalButton = document.querySelector(
-    //     '[data-target="#exampleModalCenter2"]'
-    //   );
-    //   if (modalButton) {
-    //     modalButton.click();
-    //   }
-    // }
   };
 
-
+  // get all users who liked the quote that is not added by the logged in user
   const getAllLikedUsers = async (quote) => {
-    if (quote.userId !== userId) {
-      const headers = {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      };
+    try {
+      if (quote.userId !== userId) {
+        const response = await quoteService.getAllLikedUsersList(quote, token);
+        // console.log("liked users = ", response);
+        setAllUserReactionsList(response);
 
-      const response = await axios.get(
-        `${baseURL}/quotes/${quote.id}/like/users`,
-        { headers }
-      );
-      console.log("liked users = ", response.data.users);
-      setLikeReactionUsers(response.data.users);
-      
-      // Open the modal when the data is fetched
-      const modalButton = document.querySelector(
-        '[data-target="#exampleModalCenter2"]'
-      );
+        // Open the modal when the data is fetched
+        const modalButton = document.querySelector(
+          '[data-target="#exampleModalCenter2"]'
+        );
 
-      if (modalButton) {
-        modalButton.click();
+        if (modalButton) {
+          modalButton.click();
+        }
       }
+    } catch (error) {
+      console.log("Error while getting the user list:", error);
     }
-  }
+  };
 
   const getAllDislikedUsers = async (quote) => {
-    if (quote.userId !== userId) {
-      const headers = {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      };
+    try {
+      if (quote.userId !== userId) {
+        const response = await quoteService.getAllDislikedUsersList(
+          quote,
+          token
+        );
+        // console.log("liked users = ", response);
+        setAllUserReactionsList(response);
 
-      const response = await axios.get(
-        `${baseURL}/quotes/${quote.id}/like/users`,
-        { headers }
-      );
-      console.log("liked users = ", response.data.users);
-      setDislikeReactionUsers(response.data.users);
-      
-      // Open the modal when the data is fetched
-      const modalButton = document.querySelector(
-        '[data-target="#exampleModalCenter3"]'
-      );
+        // Open the modal when the data is fetched
+        const modalButton = document.querySelector(
+          '[data-target="#exampleModalCenter3"]'
+        );
 
-      if (modalButton) {
-        modalButton.click();
+        if (modalButton) {
+          modalButton.click();
+        }
       }
+    } catch (error) {
+      console.log("Error while getting the user list:", error);
     }
-  }
 
+    
+  };
   return (
-    <div className="scrollable-page">
+    <div className="scrollable-page1">
       <div className="title-div">Quotes</div>
-      <div className="main-sub">
-        {isAuthenticated && (
-          <div className="button-container d-flex align-items-center">
-            <Link to="/addquote" className="btn btn my-2 my-sm-0 addQuoteBtn">
-              Add Quote ➕
-            </Link>
-
-            <div className="search-container ml-auto d-flex">
-              <select
-                className="form-control mr-2"
-                value={filterType}
-                onChange={(e) => setFilterType(e.target.value)}
-              >
-                <option value="Author">Author</option>
-                <option value="Quote">Quote</option>
-                <option value="Tag">Tag</option>
-              </select>
-
-              <input
-                type="text"
-                className="form-control mr-2 mt-0"
-                placeholder={`Enter ${filterType.toLowerCase()}'s name`}
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-
-              <button className="btn mr-2" onClick={handleSearch}>
-                Search
-              </button>
-
-              <button className="btn " onClick={handleRefresh}>
-                Refresh
-              </button>
-            </div>
+      <div className="main-sub1">
+        {/* {isAuthenticated && ( */}
+        <div className="auth-container ">
+          <div className="filter-div first-div">
+            <select
+              className="form-control mr-2"
+              value={filterType}
+              onChange={(e) => setFilterType(e.target.value)}
+            >
+              <option value="Author">Author</option>
+              <option value="Quote">Quote</option>
+              <option value="Tag">Tag</option>
+            </select>
           </div>
-        )}
+          <div>
+            <input
+              type="text"
+              className="form-control mr-2"
+              placeholder={`Enter ${filterType.toLowerCase()}'s name`}
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+          <div>
+            <button className="btn mr-2 searchbtn" onClick={handleSearch}>
+              Search
+            </button>
+          </div>
+          <div>
+            <button className="btn refbtn" onClick={handleRefresh}>
+              Refresh
+            </button>
+          </div>
+          {isAuthenticated && (
+            <div>
+              <Link to="/addquote" className="btn btn my-2 my-sm-0 addQuoteBtn">
+                Add Quote ➕
+              </Link>
+            </div>
+          )}
+        </div>
+        {/* )} */}
 
         {quotes.map((quote, index) => (
           <blockquote key={index}>
@@ -1002,13 +960,17 @@ function Quotes({ isAuthenticated }) {
                           ? () => getLikedUsers(quote.id)
                           : () => likeQuote(quote.id)
                       }
+                      style={{marginRight:"5px"}}
                     >
                       <FontAwesomeIcon
                         icon={faThumbsUp}
                         style={{ color: "#6ca32e" }}
                       />
                     </button>
-                    <button onClick={() => getAllLikedUsers(quote)}> {quote.like}</button>
+                    <button onClick={() => getAllLikedUsers(quote)} style={{marginRight:"25px"}}>
+                      {" "}
+                      {quote.like}
+                    </button>
                   </span>
 
                   <span>
@@ -1018,14 +980,20 @@ function Quotes({ isAuthenticated }) {
                           ? () => getDislikedUsers(quote.id)
                           : () => dislikeQuote(quote.id)
                       }
+                      style={{marginRight:"5px"}}
                     >
                       <FontAwesomeIcon
                         icon={faThumbsDown}
                         style={{ color: "#6ca32e" }}
                       />
                     </button>
-                    <button onClick={() => getAllDislikedUsers(quote)}> {quote.dislikes}</button>
+                    <button onClick={() => getAllDislikedUsers(quote)} style={{marginRight:"25px"}}>
+                      {" "}
+                      {quote.dislikes}
+                    </button>
                   </span>
+
+                  <span>tags: {quote.tag}</span>
                 </div>
               </div>
               <div className="authorNameContainer">-{quote.author}</div>
@@ -1038,6 +1006,7 @@ function Quotes({ isAuthenticated }) {
           </blockquote>
         ))}
 
+
         {/* <!-- Button trigger modal --> */}
         <button
           type="button"
@@ -1045,121 +1014,116 @@ function Quotes({ isAuthenticated }) {
           data-toggle="modal"
           data-target="#exampleModalCenter"
           style={{ visibility: "hidden" }}
-          >
-            Launch demo modal
+        >
+          Launch demo modal
         </button>
 
-            {/* <!-- Modal --> */}
-            <div
-              className="modal fade"
-              id="exampleModalCenter"
-              tabIndex="-1"
-              role="dialog"
-              aria-labelledby="exampleModalCenterTitle"
-              aria-hidden="true"
-            >
-              <div className="modal-dialog modal-dialog-centered" role="document">
-                <div className="modal-content">
-                  <div className="modal-header">
-                    <h5 className="modal-title" id="exampleModalLongTitle">
-                      People who reacted
-                    </h5>
+        {/* <!-- Modal --> */}
+        <div
+          className="modal fade"
+          id="exampleModalCenter"
+          tabIndex="-1"
+          role="dialog"
+          aria-labelledby="exampleModalCenterTitle"
+          aria-hidden="true"
+        >
+          <div className="modal-dialog modal-dialog-centered" role="document">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title" id="exampleModalLongTitle">
+                  People who reacted
+                </h5>
+                <button
+                  type="button"
+                  className="close"
+                  data-dismiss="modal"
+                  aria-label="Close"
+                >
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div className="modal-body">
+                <nav>
+                  <div className="nav nav-tabs" id="nav-tab" role="tablist">
                     <button
+                      className="nav-link active"
+                      id="nav-like-tab"
+                      data-toggle="tab"
+                      data-target="#nav-like"
                       type="button"
-                      className="close"
-                      data-dismiss="modal"
-                      aria-label="Close"
+                      role="tab"
+                      aria-controls="nav-like"
+                      aria-selected="true"
                     >
-                      <span aria-hidden="true">&times;</span>
+                      Liked 👍
+                    </button>
+                    <button
+                      className="nav-link"
+                      id="nav-dislike-tab"
+                      data-toggle="tab"
+                      data-target="#nav-dislike"
+                      type="button"
+                      role="tab"
+                      aria-controls="nav-dislike"
+                      aria-selected="false"
+                    >
+                      Disliked 👎
                     </button>
                   </div>
-                  <div className="modal-body">
-                    <nav>
-                      <div className="nav nav-tabs" id="nav-tab" role="tablist">
-                        <button
-                          className="nav-link active"
-                          id="nav-like-tab"
-                          data-toggle="tab"
-                          data-target="#nav-like"
-                          type="button"
-                          role="tab"
-                          aria-controls="nav-like"
-                          aria-selected="true"
-                        >
-                          Liked 👍
-                        </button>
-                        <button
-                          className="nav-link"
-                          id="nav-dislike-tab"
-                          data-toggle="tab"
-                          data-target="#nav-dislike"
-                          type="button"
-                          role="tab"
-                          aria-controls="nav-dislike"
-                          aria-selected="false"
-                        >
-                          Disliked 👎
-                        </button>
-                      </div>
-                    </nav>
+                </nav>
 
-                    <div className="tab-content" id="nav-tabContent">
-                      <div
-                        className="tab-pane fade show active"
-                        id="nav-like"
-                        role="tabpanel"
-                        aria-labelledby="nav-like-tab"
-                        style={{ overflowY: "scroll" }}
-                      >
-                        {Array.isArray(likeReactionUsers) &&
-                        likeReactionUsers.length > 0 ? (
-                          likeReactionUsers.map((user, index) => (
-                            <ul>
-                              <li key={index}>
-                                {user.first_name} {user.last_name}
-                              </li>
-                            </ul>
-                          ))
-                        ) : (
-                          <div>
-                            <h5>No one liked this quote</h5>
-                          </div>
-                        )}
+                <div className="tab-content" id="nav-tabContent">
+                  <div
+                    className="tab-pane fade show active"
+                    id="nav-like"
+                    role="tabpanel"
+                    aria-labelledby="nav-like-tab"
+                    style={{ overflowY: "scroll" }}
+                  >
+                    {Array.isArray(likeReactionUsers) &&
+                    likeReactionUsers.length > 0 ? (
+                      likeReactionUsers.map((user, index) => (
+                        <ul key={index}>
+                          <li>
+                            {user.first_name} {user.last_name}
+                          </li>
+                        </ul>
+                      ))
+                    ) : (
+                      <div>
+                        <h5>No one liked this quote</h5>
                       </div>
-
-                      <div
-                        className="tab-pane fade"
-                        id="nav-dislike"
-                        role="tabpanel"
-                        aria-labelledby="nav-dislike-tab"
-                        style={{ overflowY: "scroll" }}
-                      >
-                        {dislikeReactionUsers.length > 0 ? (
-                          dislikeReactionUsers.map((user, index) => (
-                            <ul>
-                              <li key={index}>
-                                {user.first_name} {user.last_name}
-                              </li>
-                            </ul>
-                          ))
-                        ) : (
-                          <div>
-                            <h5>No one disliked this quote</h5>
-                          </div>
-                        )}
-                      </div>
-                    </div>
+                    )}
                   </div>
-                  {/* <div className="modal-footer">
-                      <button type="button" className="btn btn-danger" data-dismiss="modal">X</button>
-                    </div> */}
+
+                  <div
+                    className="tab-pane fade"
+                    id="nav-dislike"
+                    role="tabpanel"
+                    aria-labelledby="nav-dislike-tab"
+                    style={{ overflowY: "scroll" }}
+                  >
+                    {Array.isArray(dislikeReactionUsers) &&
+                    dislikeReactionUsers.length > 0 ? (
+                      dislikeReactionUsers.map((user, index) => (
+                        <ul key={index}>
+                          <li>
+                            {user.first_name} {user.last_name}
+                          </li>
+                        </ul>
+                      ))
+                    ) : (
+                      <div>
+                        <h5>No one disliked this quote</h5>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
+              
             </div>
-
-
-
-
+          </div>
+        </div>
 
         {/*  Button2 trigger modal - */}
         <button
@@ -1173,64 +1137,63 @@ function Quotes({ isAuthenticated }) {
         </button>
 
         {/* <!-- Modal2 --> */}
-            <div
-              className="modal fade"
-              id="exampleModalCenter2"
-              tabIndex="-1"
-              role="dialog"
-              aria-labelledby="exampleModalCenterTitle"
-              aria-hidden="true"
-            >
-              <div className="modal-dialog modal-dialog-centered" role="document">
-                <div className="modal-content">
-                  <div className="modal-header">
-                    <h5 className="modal-title" id="exampleModalLongTitle">
-                      People who reacted
-                    </h5>
-                    <button
-                      type="button"
-                      className="close"
-                      data-dismiss="modal"
-                      aria-label="Close"
-                    >
-                      <span aria-hidden="true">&times;</span>
-                    </button>
-                  </div>
-                  <div className="modal-body">
-
-                    <div className="tab-content" id="nav-tabContent">
-                      <div
-                        className="tab-pane fade show active"
-                        id="nav-like"
-                        role="tabpanel"
-                        aria-labelledby="nav-like-tab"
-                        style={{ overflowY: "scroll" }}
-                        >
-                        {Array.isArray(likeReactionUsers) &&
-                        likeReactionUsers.length > 0 ? (
-                          likeReactionUsers.map((user, index) => (
-                            <ul>
-                              <li key={index}>
-                                {user.first_name} {user.last_name}
-                              </li>
-                            </ul>
-                          ))
-                        ) : (
-                          <div>
-                            <h5>No one liked this quote</h5>
-                          </div>
-                        )}
+        <div
+          className="modal fade"
+          id="exampleModalCenter2"
+          tabIndex="-1"
+          role="dialog"
+          aria-labelledby="exampleModalCenterTitle"
+          aria-hidden="true"
+        >
+          <div className="modal-dialog modal-dialog-centered" role="document">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title" id="exampleModalLongTitle">
+                  People who reacted
+                  <FontAwesomeIcon
+                    icon={faThumbsUp}
+                    style={{ color: "#6ca32e", marginLeft: "0.5rem" }}
+                  />
+                </h5>
+                <button
+                  type="button"
+                  className="close"
+                  data-dismiss="modal"
+                  aria-label="Close"
+                >
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div className="modal-body">
+                <div className="tab-content" id="nav-tabContent">
+                  <div
+                    className="tab-pane fade show active"
+                    id="nav-like"
+                    role="tabpanel"
+                    aria-labelledby="nav-like-tab"
+                    style={{ overflowY: "scroll" }}
+                  >
+                    {Array.isArray(allUserReactionsList) &&
+                    allUserReactionsList.length > 0 ? (
+                      allUserReactionsList.map((user, index) => (
+                        <ul>
+                          <li key={index}>
+                            {user.first_name} {user.last_name}
+                          </li>
+                        </ul>
+                      ))
+                    ) : (
+                      <div>
+                        <h5>No one liked this quote</h5>
                       </div>
-                    </div>
-
+                    )}
                   </div>
-                  {/* <div className="modal-footer">
-                      <button type="button" className="btn btn-danger" data-dismiss="modal">X</button>
-                    </div> */}
                 </div>
               </div>
+              
             </div>
-
+          </div>
+        </div>
 
         {/*  Button3 trigger modal - */}
         <button
@@ -1240,69 +1203,68 @@ function Quotes({ isAuthenticated }) {
           data-target="#exampleModalCenter3"
           style={{ visibility: "hidden" }}
         >
-          Launch demo modal2
+          Launch demo modal3
         </button>
 
         {/* <!-- Modal3 --> */}
-            <div
-              className="modal fade"
-              id="exampleModalCenter3"
-              tabIndex="-1"
-              role="dialog"
-              aria-labelledby="exampleModalCenterTitle"
-              aria-hidden="true"
-            >
-              <div className="modal-dialog modal-dialog-centered" role="document">
-                <div className="modal-content">
-                  <div className="modal-header">
-                    <h5 className="modal-title" id="exampleModalLongTitle">
-                      People who reacted
-                    </h5>
-                    <button
-                      type="button"
-                      className="close"
-                      data-dismiss="modal"
-                      aria-label="Close"
-                    >
-                      <span aria-hidden="true">&times;</span>
-                    </button>
+        <div
+          className="modal fade"
+          id="exampleModalCenter3"
+          tabIndex="-1"
+          role="dialog"
+          aria-labelledby="exampleModalCenterTitle"
+          aria-hidden="true"
+        >
+          <div className="modal-dialog modal-dialog-centered" role="document">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title" id="exampleModalLongTitle">
+                  People who reacted
+                  <FontAwesomeIcon
+                    icon={faThumbsDown}
+                    style={{ color: "#6ca32e", marginLeft: "0.5rem" }}
+                  />
+                </h5>
+                <button
+                  type="button"
+                  className="close"
+                  data-dismiss="modal"
+                  aria-label="Close"
+                >
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div className="modal-body">
+                <div className="tab-content" id="nav-tabContent">
+                  <div
+                    className="tab-pane fade show active"
+                    id="nav-dislike"
+                    role="tabpanel"
+                    aria-labelledby="nav-dislike-tab"
+                    style={{ overflowY: "scroll" }}
+                  >
+                    {Array.isArray(allUserReactionsList) &&
+                    allUserReactionsList.length >= 0 ? (
+                      allUserReactionsList.map((user, index) => (
+                        <ul>
+                          <li key={index}>
+                            {user.first_name} {user.last_name}
+                          </li>
+                        </ul>
+                      ))
+                    ) : (
+                      <div>
+                        <h5>No one disliked this quote</h5>
+                      </div>
+                    )}
                   </div>
-                  <div className="modal-body">
-
-                  <div className="tab-content" id="nav-tabContent">
-<div
-  className="tab-pane fade show active"
-  id="nav-dislike"  
-  role="tabpanel"
-  aria-labelledby="nav-dislike-tab"  
-  style={{ overflowY: "scroll" }}
->
-  {Array.isArray(dislikeReactionUsers) &&
-  dislikeReactionUsers.length >= 0 ? (
-    dislikeReactionUsers.map((user, index) => (
-      <ul>
-        <li key={index}>
-          {user.first_name} {user.last_name}
-        </li>
-      </ul>
-    ))
-  ) : (
-    <div>
-      <h5>No one disliked this quote</h5>
-    </div>
-  )}
-</div>
-</div>
-
-
-                  </div>
-                  {/* <div className="modal-footer">
-                      <button type="button" className="btn btn-danger" data-dismiss="modal">X</button>
-                    </div> */}
                 </div>
               </div>
+              
             </div>
-        
+          </div>
+        </div>
+
       </div>
     </div>
   );

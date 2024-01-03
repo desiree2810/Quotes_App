@@ -1,7 +1,6 @@
 @import url(https://fonts.googleapis.com/css?family=Open+Sans:400italic);
 
 
-/* new css rest above can be removed: */
 
 .title-div{
   text-align: center;
@@ -88,17 +87,18 @@ button:hover{
 
   .auth-container {
     margin-top: 40px;
+    /* margin-left: 0px; */
     display: flex;
     align-items: center;
-    /* justify-content: space-between; */
+    justify-content: center;
     padding: 5px; 
-    background-color: #ffffff; 
+    /* background-color: #ffffff;  */
     border-radius: 8pxrgb(255, 255, 255)d border-radius for rounded corners 
   }
   
-  .Searchtxt {
+  .first-div {
     font-size: 18px;
-    margin-left: 10px;
+    /* margin-left: 200px; */
     margin-right: 5px; 
   }
   
@@ -106,7 +106,7 @@ button:hover{
     justify-content: space-between;
     margin-left: 2px;
     height: 35px; 
-    margin-right:50px ;
+    margin-right:5px ;
   }
   
   .btn {
@@ -116,7 +116,7 @@ button:hover{
   }
   
   .addQuoteBtn {
-    margin-left: 50px;
+    margin-left: 170px;
     background-color: #d99a12; 
     color: white;
     border-radius: 8px;
@@ -129,12 +129,14 @@ button:hover{
     background-color: #d99a12;
     border: none;
     color: white;
-
+    margin-left: 6px;
+    padding: 0px;
   }
   .refbtn{
     background-color: #d99a12;
     border: none;
     color: white;
+    padding: 0px;
   }
   
   .searchbtn:hover,
@@ -147,12 +149,6 @@ button:hover{
   .filter-div{
     margin-right: 5px;
   }
-
-
-
-
-
-
 
   .tooltip {
     position: absolute;
@@ -174,26 +170,21 @@ button:hover{
   }
   
 
-
-
-
-  /* Styling for the dropdown container */
+  
 .user_reactioncount {
   display: inline-block;
   position: relative;
 }
 
-/* Styling for the dropdown button */
 .countbtn {
-  background-color: #007bff; /* Set your preferred background color */
-  color: #ffffff; /* Set your preferred text color */
-  border: 1px solid #007bff; /* Set your preferred border color */
-  padding: 8px 16px; /* Adjust padding as needed */
-  border-radius: 4px; /* Adjust border-radius as needed */
+  background-color: #007bff; 
+  color: #ffffff; 
+  border: 1px solid #007bff; 
+  padding: 8px 16px; 
+  border-radius: 4px; 
   cursor: pointer;
 }
 
-/* Styling for the dropdown menu */
 .dropdown-menu {
   position: absolute;
   top: 100%;
@@ -206,28 +197,25 @@ button:hover{
   margin: 2px 0 0;
   font-size: 14px;
   text-align: left;
-  background-color: #ffffff; /* Set your preferred background color */
-  border: 1px solid rgba(0, 0, 0, 0.15); /* Set your preferred border color */
-  border-radius: 4px; /* Adjust border-radius as needed */
+  background-color: #ffffff; 
+  border: 1px solid rgba(0, 0, 0, 0.15); 
+  border-radius: 4px; 
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
 }
 
-/* Styling for the dropdown menu items */
 .dropdown-menu p {
   display: block;
   width: 100%;
-  padding: 8px 16px; /* Adjust padding as needed */
+  padding: 8px 16px; 
   clear: both;
-  color: #333333; /* Set your preferred text color */
-  margin: 0; /* Remove default margin */
+  color: #333333; 
+  margin: 0; 
 }
 
-/* Hover effect for dropdown items */
 .dropdown-menu p:hover {
-  background-color: #f8f9fa; /* Set your preferred hover background color */
+  background-color: #f8f9fa; 
 }
 
-/* Active/focused state for dropdown items */
 .dropdown-menu p:focus, .dropdown-menu p:active {
-  background-color: #e9ecef; /* Set your preferred active background color */
+  background-color: #e9ecef; 
 }
