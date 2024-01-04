@@ -690,6 +690,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useLocation, Link, useNavigate } from "react-router-dom";
 import "./Quotes.css";
+import QuoteComponent from "./QuoteComponent";
+
 import {
   faThumbsDown,
   faThumbsUp,
@@ -704,10 +706,9 @@ function Quotes({ isAuthenticated }) {
   const [searchTerm, setSearchTerm] = useState("");
   const location = useLocation();
   const loggedInUserId = localStorage.getItem("userId");
-
   const [likeReactionUsers, setLikeReactionUsers] = useState([]);
   const [dislikeReactionUsers, setDislikeReactionUsers] = useState([]);
-
+  const loggedId = localStorage.getItem("userId");
   const [allUserReactionsList, setAllUserReactionsList] = useState([]);
 
   const baseURL = import.meta.env.VITE_API_URL;
@@ -945,65 +946,20 @@ function Quotes({ isAuthenticated }) {
             </div>
           )}
         </div>
-        {/* )} */}
-
+ 
         {quotes.map((quote, index) => (
-          <blockquote key={index}>
-            <div className="mainContainer">
-              <div className="quoteContainer">
-                {quote.quote}
-                <div className="QuoteReactions">
-                  <span>
-                    <button
-                      onClick={
-                        quote.userId === userId
-                          ? () => getLikedUsers(quote.id)
-                          : () => likeQuote(quote.id)
-                      }
-                      style={{marginRight:"5px"}}
-                    >
-                      <FontAwesomeIcon
-                        icon={faThumbsUp}
-                        style={{ color: "#6ca32e" }}
-                      />
-                    </button>
-                    <button onClick={() => getAllLikedUsers(quote)} style={{marginRight:"25px"}}>
-                      {" "}
-                      {quote.like}
-                    </button>
-                  </span>
-
-                  <span>
-                    <button
-                      onClick={
-                        quote.userId === userId
-                          ? () => getDislikedUsers(quote.id)
-                          : () => dislikeQuote(quote.id)
-                      }
-                      style={{marginRight:"5px"}}
-                    >
-                      <FontAwesomeIcon
-                        icon={faThumbsDown}
-                        style={{ color: "#6ca32e" }}
-                      />
-                    </button>
-                    <button onClick={() => getAllDislikedUsers(quote)} style={{marginRight:"25px"}}>
-                      {" "}
-                      {quote.dislikes}
-                    </button>
-                  </span>
-
-                  <span>tags: {quote.tag}</span>
-                </div>
-              </div>
-              <div className="authorNameContainer">-{quote.author}</div>
-              <div className="userAdded" style={{ color: "#674ea7" }}>
-                {quote.userId === loggedInUserId && (
-                  <FontAwesomeIcon icon={faUserPlus} />
-                )}
-              </div>
-            </div>
-          </blockquote>
+          <QuoteComponent
+            key={index}
+            quote={quote}
+            userId={userId}
+            loggedInUserId={loggedInUserId}
+            likeQuote={likeQuote}
+            dislikeQuote={dislikeQuote}
+            getLikedUsers={getLikedUsers}
+            getDislikedUsers={getDislikedUsers}
+            getAllLikedUsers={getAllLikedUsers}
+            getAllDislikedUsers={getAllDislikedUsers}
+          />
         ))}
 
 

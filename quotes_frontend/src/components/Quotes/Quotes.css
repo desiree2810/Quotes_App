@@ -219,3 +219,7 @@ button:hover{
 .dropdown-menu p:focus, .dropdown-menu p:active {
   background-color: #e9ecef; 
 }
+
+.quoteContainer{
+  font-size: 18px;
+}

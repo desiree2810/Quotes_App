@@ -12,6 +12,7 @@ import ProtectedRoute from './ProtectedRoute';
 
 
 const AllRoutes = ({isAuthenticated,setIsAuthenticated}) => {
+  // const match = useRouteMatch('/quotes');
 return(
       <Routes>
         <Route path="/" element={ <ProtectedRoute Component={Homescreen}/> } />

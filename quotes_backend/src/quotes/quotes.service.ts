@@ -5,9 +5,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Quote } from './entities/quote.entity';
 import { UserQuoteReaction } from 'src/user-quote-reaction/entities/user-quote-reaction.entity';
 import { User } from 'src/user/entities/user.entity';
-import { Repository } from 'typeorm';
+import { Repository, ILike } from 'typeorm';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { UserService } from 'src/user/user.service';
+
 
 @Injectable()
 export class QuotesService {
@@ -88,6 +89,27 @@ create(@Body() createQuoteDto: CreateQuoteDto, id:any){
 
 
 // }
+// async findAll(filter?: { author?: string; tag?: string; quote?: string }): Promise<Quote[]> {
+//   if (!filter) {
+//     return this.quoteRepository.find();
+//   }
+
+//   const whereClause: any = {};
+
+//   if (filter.author) {
+//     whereClause.author = filter.author;
+//   }
+//   if (filter.tag) {
+//     whereClause.tag = filter.tag;
+//   }
+//   if (filter.quote) {
+//     whereClause.quote = filter.quote;
+//   }
+
+//   return this.quoteRepository.find({
+//     where: whereClause,
+//   });
+// }
 async findAll(filter?: { author?: string; tag?: string; quote?: string }): Promise<Quote[]> {
   if (!filter) {
     return this.quoteRepository.find();
@@ -96,13 +118,13 @@ async findAll(filter?: { author?: string; tag?: string; quote?: string }): Promi
   const whereClause: any = {};
 
   if (filter.author) {
-    whereClause.author = filter.author;
+    whereClause.author = ILike(`%${filter.author}%`)
   }
   if (filter.tag) {
-    whereClause.tag = filter.tag;
+    whereClause.tag = ILike(`%${filter.tag}%`)
   }
   if (filter.quote) {
-    whereClause.quote = filter.quote;
+    whereClause.quote = ILike(`%${filter.quote}%`)
   }
 
   return this.quoteRepository.find({

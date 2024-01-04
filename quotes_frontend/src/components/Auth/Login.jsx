@@ -39,7 +39,16 @@ const Login = ({ setIsAuthenticated }) => {
         const encodedPayload_userId = encodedPayload.userId;
         // console.log(`User logged in successfully with userId = ${encodedPayload_userId}`);
         localStorage.setItem("userId", encodedPayload_userId); 
+
+
+        // set name in localstorage
+        const encodedPayload_firstName = encodedPayload.first_name;
+        const encodedPayload_lastName = encodedPayload.last_name;
+        localStorage.setItem("userFirstName", encodedPayload_firstName); 
+        localStorage.setItem("userLastName", encodedPayload_lastName); 
+        // console.log("==========",encodedPayload_firstName,encodedPayload_lastName)
         setIsAuthenticated(true);
+
 
 
         // to set all quotes Liked by user in localstorage

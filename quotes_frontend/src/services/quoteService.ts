@@ -107,6 +107,120 @@ const quoteService = {
     }
   },
 
+  addQuote: async (quote, author, tags, token) => {
+    try {
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      };
+
+      const response = await axios.post(`${baseURL}/quotes`,{quote,author,tag: tags.join(","),}, { headers });
+      return response.data;
+
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  // API call to save edited quote
+  saveEditedQuote: async (quoteId, editedQuote, editedAuthor, token) => {
+    try {
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      };
+
+      const response = await axios.patch(`${baseURL}/quotes/${quoteId}`,{ quote: editedQuote, author: editedAuthor },{ headers });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+
+  // to render logged in user quote
+  getAddedQuotes: async (userId, token) => {
+    try {
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      };
+
+      const response = await axios.get(`${baseURL}/quotes`, { headers });
+      const addedQuotes = response.data.filter((quote) => quote.userId === userId);
+
+      return addedQuotes;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  // to render quotes liked by user
+  getLikedQuotes: async (userId, token) => {
+    try {
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      };
+
+      const response = await axios.get(
+        `${baseURL}/users/${userId}/favourite-quotes`,
+        { headers }
+      );
+
+      if (response.data && Array.isArray(response.data.quotes)) {
+        return response.data.quotes;
+      } else {
+        console.error("Liked quotes data might not be an array:", response.data);
+        return [];
+      }
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  // to render all quotes disliked by users
+  getDislikedQuotes: async (userId, token) => {
+    try {
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      };
+
+      const response = await axios.get(
+        `${baseURL}/users/${userId}/unfavourite-quotes`,
+        { headers }
+      );
+
+      if (response.data && Array.isArray(response.data.quotes)) {
+        return response.data.quotes;
+      } else {
+        console.error("Disliked quotes data might not be an array:", response.data);
+        return [];
+      }
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  // to delete a quote that was added by the user
+  deleteQuote: async (quoteId, token) => {
+    try {
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      };
+
+      const response = await axios.delete(`${baseURL}/quotes/${quoteId}`, {
+        headers,
+      });
+
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
 };
 
 export default quoteService;
