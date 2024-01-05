@@ -27,7 +27,7 @@ const Login = ({ setIsAuthenticated }) => {
       // const response = await axios.post(`${baseURL}/auth/sign-in`,loginformData);
       const response = await authService.login(loginformData)
 
-      console.log(response)
+      // console.log(response)
       if (response.status === 201) {
         // to store token in localstorage
         const token = response.data.token;

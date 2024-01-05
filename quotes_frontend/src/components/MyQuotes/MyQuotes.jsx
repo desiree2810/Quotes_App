@@ -262,7 +262,7 @@ const MyQuotes = () => {
           </ul>
         </div>
         <div className="quotes-display">
-          {activeTab === "Added Quotes" &&
+          {activeTab === "Added Quotes"  && userAddedQuotes.length > 0 ?
             userAddedQuotes.map((quote, index) => (
               <QuoteComponent
                 key={index}
@@ -281,7 +281,16 @@ const MyQuotes = () => {
                 totalLikedQuotesCount={totalLikedQuotesCount}
                 totalDislikedQuotesCount={totalDislikedQuotesCount}
               />
-            ))}
+            ))
+            : 
+            (
+              <div className=" d-flex align-items-center justify-content-center p-5">
+              <div className="main-sub1">
+                <h4>No Quotes to display</h4>
+              </div>
+              </div>
+            )
+            }
 
           {activeTab === "Liked Quotes" &&
             allLikedQuotes.map((quote, index) => (

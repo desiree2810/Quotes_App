@@ -91,7 +91,7 @@ function Authors({ isAuthenticated }) {
           )}
         </div>
 
-        {authorQuotes.length > 0 && (
+        {authorQuotes.length > 0 ? (
           <div>
             <h2>Quotes by {searchTerm}</h2>
             <div className="quotesforauthor">
@@ -102,7 +102,15 @@ function Authors({ isAuthenticated }) {
               </ul>
             </div>
           </div>
-        )}
+        ):
+        (
+          <div className="scrollable-page1 d-flex align-items-center justify-content-center p-5">
+          <div className="main-sub1">
+            <h4>No quotes are added hence no authors list is avaliable</h4>
+          </div>
+          </div>
+        )
+        }
       </div>
     </div>
   );

@@ -6,6 +6,7 @@ import { User } from './entities/user.entity';
 import { UserQuoteReaction } from 'src/user-quote-reaction/entities/user-quote-reaction.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Quote } from 'src/quotes/entities/quote.entity';
+import * as bcrypt from 'bcrypt';
 // import { Constants } from 'src/utils/constants';
 
 @Injectable()
@@ -22,16 +23,35 @@ export class UserService {
     {}
     
     
-  create(createUserDto: CreateUserDto): Promise<User> {
+  // create(createUserDto: CreateUserDto): Promise<User> {
+  //   let user: User = new User();
+  //   user.first_name = createUserDto.first_name;
+  //   user.last_name = createUserDto.last_name;
+  //   user.email = createUserDto.email;
+  //   user.password = createUserDto.password;
+  //   user.created_at = createUserDto.created_at;
+  //   user.updated_at = createUserDto.updated_at;
+  //   return this.userRepository.save(user);
+  // }
+
+  async create(createUserDto: CreateUserDto): Promise<User> {
+
+    const saltOrRounds = 10;
+
+    
     let user: User = new User();
     user.first_name = createUserDto.first_name;
     user.last_name = createUserDto.last_name;
     user.email = createUserDto.email;
-    user.password = createUserDto.password;
+    
+    // hashing the password
+    user.password = await bcrypt.hash(createUserDto.password, saltOrRounds);
+    // user.password = createUserDto.password;
     user.created_at = createUserDto.created_at;
     user.updated_at = createUserDto.updated_at;
     return this.userRepository.save(user);
   }
+
 
   findAll(): Promise<User[]> {
     return this.userRepository.find({

@@ -38,7 +38,7 @@ function Homescreen() {
           setAuthor(firstQuote.author);
           setRemainingQuotes((prevQuotes) => prevQuotes.slice(1));
         } else {
-          setQuote("No more quotes available");
+          setQuote("No quotes available");
           setAuthor("");
         }
       }, 90000); // 10 seconds interval (86400000 = 24 hr)
