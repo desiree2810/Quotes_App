@@ -1,110 +1,104 @@
-.addQuotecontainer{
-    display: flex;
+.addQuotecontainer {
+  display: flex;
   align-items: center;
   justify-content: center;
-  height: 100vh; 
+  height: 100vh;
 }
 
 .title {
   text-align: left;
-  font-size: 30px; 
+  font-size: 30px;
 }
 
 .quote-form-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    border: 1px solid #ccc;
-    padding: 10px;
-    border-radius: 10px;
-    width: 9000%; 
-    max-width: 600px;
-    /* margin: 0 auto; */
-    box-shadow: 0 0 10px rgba(2, 1, 1, 0.1);
-  }
-  
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 10px;
+  width: 9000%;
+  max-width: 600px;
+  box-shadow: 0 0 10px rgba(2, 1, 1, 0.1);
+}
 
-  .innercontatiner{
-    display:contents ;
-  }
+.innercontatiner {
+  display: contents;
+}
 
-  .input-container {
-    margin-bottom: 10px;
-    width: 100%;
-    text-align: left;
-    font-size: 20px;
+.input-container {
+  margin-bottom: 10px;
+  width: 100%;
+  text-align: left;
+  font-size: 20px;
+}
 
-  }
-  
-  textarea {
-    width: 100%;
-    padding: 8px; 
-    resize: vertical; 
-  }
-  
-  label {
-    display: block;
-    margin-bottom: 5px;
-  }
-  
-  input,
-  textarea {
-    font-size: 15px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-sizing: border-box; 
-  }
-  
-  .button-container {
-    display: flex;
-    justify-content: center;
-    width: 50%;
-    margin-top: 10px; 
-  }
-  
-  .save-button{
-    flex: 1;
-    width: 60px;
-    height: 40px;
-    margin: 0 5px;
-    font-size: 15px;
-    background-color: rgb(119, 227, 191);
-    border-radius: 10px;
-    border:none
-  }
-  .cancel-button {
-    flex: 1;
-    width: 60px;
-    height: 40px;
-    margin: 0 5px;
-    font-size: 15px;
-    border-radius: 10px;
-    border: none;
-    background-color: rgb(240, 130, 109);
-  }
-  
+textarea {
+  width: 100%;
+  padding: 8px;
+  resize: vertical;
+}
 
-  .error-message {
-    color: red;
-    font-size: 14px;
-    margin-top: 5px;
-  }
-  
+label {
+  display: block;
+  margin-bottom: 5px;
+}
 
-  .success-toast {
-    position: fixed;
-    top: 10px;
-    right: 10px;
-    background-color: #4caf50;
-    color: white;
-    padding: 15px;
-    border-radius: 5px;
-    display: inline-block;
-  }
-  
+input,
+textarea {
+  font-size: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
 
-  .addQuotecontainer .quote-form-container .input-container ul {
+.button-container {
+  display: flex;
+  justify-content: center;
+  width: 50%;
+  margin-top: 10px;
+}
+
+.save-button {
+  flex: 1;
+  width: 60px;
+  height: 40px;
+  margin: 0 5px;
+  font-size: 15px;
+  background-color: rgb(119, 227, 191);
+  border-radius: 10px;
+  border: none;
+}
+.cancel-button {
+  flex: 1;
+  width: 60px;
+  height: 40px;
+  margin: 0 5px;
+  font-size: 15px;
+  border-radius: 10px;
+  border: none;
+  background-color: rgb(240, 130, 109);
+}
+
+.error-message {
+  color: red;
+  font-size: 14px;
+  margin-top: 5px;
+}
+
+.success-toast {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  background-color: #4caf50;
+  color: white;
+  padding: 15px;
+  border-radius: 5px;
+  display: inline-block;
+}
+
+.addQuotecontainer .quote-form-container .input-container ul {
   list-style: none;
   padding: 0;
   margin: 0;

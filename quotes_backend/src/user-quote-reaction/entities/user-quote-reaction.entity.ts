@@ -1,7 +1,12 @@
-
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
-import { User } from 'src/user/entities/user.entity';  
-import { Quote } from 'src/quotes/entities/quote.entity';  
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
+import { User } from 'src/user/entities/user.entity';
+import { Quote } from 'src/quotes/entities/quote.entity';
 
 @Entity()
 export class UserQuoteReaction {

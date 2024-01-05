@@ -1,14 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useLocation, Link, useNavigate } from "react-router-dom";
-import "./Quotes.css";
-import QuoteComponent from "./QuoteComponent";
-
-import {
-  faThumbsDown,
-  faThumbsUp,
-  faUserPlus,
-} from "@fortawesome/free-solid-svg-icons";
+import "../shared/Quotes.css";
+import QuoteItem from "../shared/QuoteItem";
+import { faThumbsDown, faThumbsUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import quoteService from "../../services/quoteService";
 
@@ -30,18 +25,34 @@ function Quotes({ isAuthenticated }) {
     fetchQuotes();
   }, [location.search]);
 
+  // const fetchQuotes = async () => {
+  //   try {
+  //     let url = `${baseURL}/quotes`;
+
+  //     const searchParam = location.search;
+  //     if (searchParam) {
+  //       url += searchParam;
+  //     }
+
+  //     const response = await axios.get(url);
+  //     const arrayOfQuotes = response.data;
+  //     console.log(arrayOfQuotes);
+
+  //     if (Array.isArray(arrayOfQuotes) && arrayOfQuotes.length > 0) {
+  //       setQuotes(arrayOfQuotes);
+  //     } else {
+  //       console.log("Empty array or invalid data format");
+  //     }
+  //   } catch (error) {
+  //     console.log("Error fetching quotes:", error);
+  //   }
+  // };
+
   const fetchQuotes = async () => {
     try {
-      let url = `${baseURL}/quotes`;
-
       const searchParam = location.search;
-      if (searchParam) {
-        url += searchParam;
-      }
-
-      const response = await axios.get(url);
-      const arrayOfQuotes = response.data;
-      console.log(arrayOfQuotes);
+      const response = await quoteService.getQuotes(searchParam);
+      const arrayOfQuotes = response;
 
       if (Array.isArray(arrayOfQuotes) && arrayOfQuotes.length > 0) {
         setQuotes(arrayOfQuotes);
@@ -55,34 +66,22 @@ function Quotes({ isAuthenticated }) {
 
   // const handleSearch = async () => {
   //   try {
-  //     let url = `${baseURL}/quotes`;
+  //     if (searchTerm.trim() !== "") {
+  //       let url = `${baseURL}/quotes`;
 
-  //     if (filterType === "Author") {
-  //       url += `?author=${searchTerm}`;
-  //     } else if (filterType === "Quote") {
-  //       url += `?quote=${searchTerm}`;
-  //     } else if (filterType === "Tag") {
-  //       url += `?tag=${searchTerm}`;
-  //     }
-
-  //     const response = await axios.get(url);
-  //     navigate(`/quotes?${filterType.toLowerCase()}=${searchTerm}`);
-
-  //     const arrayOfQuotes = response.data;
-  //     if (Array.isArray(arrayOfQuotes) && arrayOfQuotes.length > 0) {
-  //       setQuotes(arrayOfQuotes);
-  //     } else {
-  //       console.log("No quotes found for the specified filter and search term");
-  //     }
-  //   } catch (error) {
-  //     console.log("Error fetching quotes:", error);
-  //   }
-  // };
+  //       if (filterType === "Author") {
+  //         url += `?author=${searchTerm}`;
+  //       } else if (filterType === "Quote") {
+  //         url += `?quote=${searchTerm}`;
+  //       } else if (filterType === "Tag") {
+  //         url += `?tag=${searchTerm}`;
+  //       }
 
   const handleSearch = async () => {
     try {
       if (searchTerm.trim() !== "") {
-        let url = `${baseURL}/quotes`;
+
+        let url = quoteService.getQuotes();
   
         if (filterType === "Author") {
           url += `?author=${searchTerm}`;
@@ -91,22 +90,23 @@ function Quotes({ isAuthenticated }) {
         } else if (filterType === "Tag") {
           url += `?tag=${searchTerm}`;
         }
-  
+
         const response = await axios.get(url);
         navigate(`/quotes?${filterType.toLowerCase()}=${searchTerm}`);
-  
+
         const arrayOfQuotes = response.data;
         if (Array.isArray(arrayOfQuotes) && arrayOfQuotes.length > 0) {
           setQuotes(arrayOfQuotes);
         } else {
-          console.log("No quotes found for the specified filter and search term");
+          console.log(
+            "No quotes found for the specified filter and search term"
+          );
         }
       }
     } catch (error) {
       console.log("Error fetching quotes:", error);
     }
   };
-  
 
   const handleRefresh = () => {
     setSearchTerm("");
@@ -115,10 +115,8 @@ function Quotes({ isAuthenticated }) {
     fetchQuotes();
   };
 
-  // to like a quote
   let token = localStorage.getItem("token");
   let userId = localStorage.getItem("userId");
-  // console.log(token, "---------", userId);
 
   // to like a quote
   const likeQuote = async (quoteId) => {
@@ -126,8 +124,6 @@ function Quotes({ isAuthenticated }) {
       if (token && userId) {
         const response = await quoteService.likeQuote(quoteId, token);
         console.log("response.data = ", response);
-
-        
       }
     } catch (error) {
       console.error("Error liking quote:", error);
@@ -155,7 +151,6 @@ function Quotes({ isAuthenticated }) {
         setLikeReactionUsers(response);
         getDislikedUsers(quoteId);
 
-        // Open the modal when the data is fetched
         const modalButton = document.querySelector(
           '[data-target="#exampleModalCenter"]'
         );
@@ -176,11 +171,9 @@ function Quotes({ isAuthenticated }) {
     try {
       if (token && userId) {
         const response = await quoteService.getDislikedUsers(quoteId, token);
-        // setLikeReactionUsers([]);
         setDislikeReactionUsers([]);
         setDislikeReactionUsers(response);
 
-        // Open the modal when the data is fetched
         const modalButton = document.querySelector(
           '[data-target="#exampleModalCenter"]'
         );
@@ -201,10 +194,8 @@ function Quotes({ isAuthenticated }) {
     try {
       if (quote.userId !== userId) {
         const response = await quoteService.getAllLikedUsersList(quote, token);
-        // console.log("liked users = ", response);
         setAllUserReactionsList(response);
 
-        // Open the modal when the data is fetched
         const modalButton = document.querySelector(
           '[data-target="#exampleModalCenter2"]'
         );
@@ -225,10 +216,8 @@ function Quotes({ isAuthenticated }) {
           quote,
           token
         );
-        // console.log("liked users = ", response);
         setAllUserReactionsList(response);
 
-        // Open the modal when the data is fetched
         const modalButton = document.querySelector(
           '[data-target="#exampleModalCenter3"]'
         );
@@ -240,14 +229,11 @@ function Quotes({ isAuthenticated }) {
     } catch (error) {
       console.log("Error while getting the user list:", error);
     }
-
-    
   };
   return (
     <div className="scrollable-page1">
       <div className="title-div">Quotes</div>
       <div className="main-sub1">
-        {/* {isAuthenticated && ( */}
         <div className="auth-container ">
           <div className="filter-div first-div">
             <select
@@ -288,25 +274,32 @@ function Quotes({ isAuthenticated }) {
             </div>
           )}
         </div>
- 
-        {/* {quotes.map((quote, index) => (
-          <QuoteComponent
-            key={index}
-            quote={quote}
-            userId={userId}
-            loggedInUserId={loggedInUserId}
-            likeQuote={likeQuote}
-            dislikeQuote={dislikeQuote}
-            getLikedUsers={getLikedUsers}
-            getDislikedUsers={getDislikedUsers}
-            getAllLikedUsers={getAllLikedUsers}
-            getAllDislikedUsers={getAllDislikedUsers}
-          />
-        ))} */}
 
+        {/* {quotes.length > 0 ? (
+          quotes.map((quote, index) => (
+            <QuoteItem
+              key={index}
+              quote={quote}
+              userId={userId}
+              loggedInUserId={loggedInUserId}
+              likeQuote={likeQuote}
+              dislikeQuote={dislikeQuote}
+              getLikedUsers={getLikedUsers}
+              getDislikedUsers={getDislikedUsers}
+              getAllLikedUsers={getAllLikedUsers}
+              getAllDislikedUsers={getAllDislikedUsers}
+            />
+          ))
+        ) : (
+          <div className="scrollable-page1 d-flex align-items-center justify-content-center p-5">
+            <div className="main-sub1">
+              <h4>No Quotes Available to Display</h4>
+            </div>
+          </div>
+        )} */}
         {quotes.length > 0 ? (
           quotes.map((quote, index) => (
-            <QuoteComponent
+            <QuoteItem
               key={index}
               quote={quote}
               userId={userId}
@@ -327,8 +320,6 @@ function Quotes({ isAuthenticated }) {
           </div>
         )}
 
-
-        {/* <!-- Button trigger modal --> */}
         <button
           type="button"
           className="btn btn-primary"
@@ -339,7 +330,6 @@ function Quotes({ isAuthenticated }) {
           Launch demo modal
         </button>
 
-        {/* <!-- Modal --> */}
         <div
           className="modal fade"
           id="exampleModalCenter"
@@ -441,12 +431,10 @@ function Quotes({ isAuthenticated }) {
                   </div>
                 </div>
               </div>
-              
             </div>
           </div>
         </div>
 
-        {/*  Button2 trigger modal - */}
         <button
           type="button"
           className="btn btn-primary"
@@ -457,7 +445,6 @@ function Quotes({ isAuthenticated }) {
           Launch demo modal2
         </button>
 
-        {/* <!-- Modal2 --> */}
         <div
           className="modal fade"
           id="exampleModalCenter2"
@@ -511,12 +498,10 @@ function Quotes({ isAuthenticated }) {
                   </div>
                 </div>
               </div>
-              
             </div>
           </div>
         </div>
 
-        {/*  Button3 trigger modal - */}
         <button
           type="button"
           className="btn btn-primary"
@@ -527,7 +512,6 @@ function Quotes({ isAuthenticated }) {
           Launch demo modal3
         </button>
 
-        {/* <!-- Modal3 --> */}
         <div
           className="modal fade"
           id="exampleModalCenter3"
@@ -581,11 +565,9 @@ function Quotes({ isAuthenticated }) {
                   </div>
                 </div>
               </div>
-              
             </div>
           </div>
         </div>
-
       </div>
     </div>
   );

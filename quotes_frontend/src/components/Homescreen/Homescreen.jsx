@@ -10,10 +10,17 @@ function Homescreen() {
   useEffect(() => {
     const likedQuotes = JSON.parse(localStorage.getItem("likedQuotes")) || [];
     const addedQuotes = JSON.parse(localStorage.getItem("addedQuotes")) || [];
-    const existingQuotes = JSON.parse(localStorage.getItem("existingQuotes")) || [];
-    const dislikedQuotes = JSON.parse(localStorage.getItem("dislikedQuotes")) || [];
+    const existingQuotes =
+      JSON.parse(localStorage.getItem("existingQuotes")) || [];
+    const dislikedQuotes =
+      JSON.parse(localStorage.getItem("dislikedQuotes")) || [];
 
-    const combinedQuotes = [...likedQuotes, ...addedQuotes, ...existingQuotes, ...dislikedQuotes];
+    const combinedQuotes = [
+      ...likedQuotes,
+      ...addedQuotes,
+      ...existingQuotes,
+      ...dislikedQuotes,
+    ];
     setRemainingQuotes(combinedQuotes);
 
     if (combinedQuotes.length > 0) {
@@ -41,7 +48,7 @@ function Homescreen() {
           setQuote("No quotes available");
           setAuthor("");
         }
-      }, 90000); // 10 seconds interval (86400000 = 24 hr)
+      }, 90000);
     }
 
     return () => clearInterval(intervalId);

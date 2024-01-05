@@ -1,6 +1,5 @@
 // import React, { useState } from "react";
-// import { Link, useNavigate } from "react-router-dom";
-// import axios from "axios";
+// import { useNavigate } from "react-router-dom";
 // import "./AddQuote.css";
 // import quoteService from "../../services/quoteService";
 
@@ -11,6 +10,10 @@
 //   const [validationErrors, setValidationErrors] = useState({});
 //   const [showSuccessToast, setShowSuccessToast] = useState(false);
 //   const [tag, setTags] = useState([]);
+
+//   const token = localStorage.getItem("token");
+//   const decodedToken = JSON.parse(atob(token.split(".")[1]));
+//   const userId = decodedToken.userId;
 
 //   const handleSave = async () => {
 //     try {
@@ -25,32 +28,8 @@
 //         return;
 //       }
 
-//       const token = localStorage.getItem("token");
-//       console.log("The logged-in user token is", token);
-//       const decodedToken = JSON.parse(atob(token.split(".")[1]));
-//       const userId = decodedToken.userId;
-//       console.log("The userId extracted from the token is ", userId);
-
-//       const tagsString = tag.join(","); //to join the tag array
-//       console.log("tagsString =", tagsString);
-
-//       const response = await axios.post(
-//         "http://localhost:3000/quotes",
-//         {
-//           quote,
-//           author,
-//           tag: tagsString,
-//         },
-//         {
-//           headers: {
-//             "Content-Type": "application/json",
-//             Authorization: `Bearer ${token}`,
-//           },
-//         }
-//       );
-
-//       if (response.status === 201) {
-//         const result = response.data;
+//       try {
+//         const result = await quoteService.addQuote(quote, author, tag, token);
 //         console.log("Quote added successfully:", result);
 
 //         setShowSuccessToast(true);
@@ -61,7 +40,7 @@
 //         setQuote("");
 //         setAuthor("");
 //         setTags([]);
-//       } else {
+//       } catch {
 //         console.error("Failed to add quote");
 //       }
 //     } catch (error) {
@@ -92,6 +71,13 @@
 //       errors.tag = "Tags cannot be empty";
 //     } else if (tag.length > 8) {
 //       errors.tag = "Too many tags, maximum is 8";
+//     }
+
+//     // Tags validation
+//     if (tag.length === 0) {
+//       errors.tag = "Tags cannot be empty";
+//     } else if (tag.length > 8) {
+//       errors.tag = "Too many tags, maximum is 8 minimum is 1";
 //     }
 
 //     return errors;
@@ -169,6 +155,9 @@
 //               onKeyUp={(event) => addTags(event)}
 //               placeholder="Press enter to add tags"
 //             />
+//             {validationErrors.tag && (
+//               <div className="error-message">{validationErrors.tag}</div>
+//             )}
 //           </div>
 
 //           <div className="button-container">
@@ -192,26 +181,20 @@
 
 
 
+
+
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
 import "./AddQuote.css";
 import quoteService from "../../services/quoteService";
 
 const AddQuoteScreen = () => {
-  const navigateToHomepage = useNavigate();
   const [quote, setQuote] = useState("");
   const [author, setAuthor] = useState("");
   const [validationErrors, setValidationErrors] = useState({});
   const [showSuccessToast, setShowSuccessToast] = useState(false);
   const [tag, setTags] = useState([]);
 
-
   const token = localStorage.getItem("token");
-  // console.log("The logged-in user token is", token);
-  const decodedToken = JSON.parse(atob(token.split(".")[1]));
-  const userId = decodedToken.userId;
-  // console.log("The userId extracted from the token is ", userId);
 
   const handleSave = async () => {
     try {
@@ -268,14 +251,13 @@ const AddQuoteScreen = () => {
     if (tag.length === 0) {
       errors.tag = "Tags cannot be empty";
     } else if (tag.length > 8) {
-      errors.tag = "Too many tags, maximum is 8";
+      errors.tag = "Too many tags, maximum is 8 minimum is 1";
     }
 
     return errors;
   };
 
   const handleCancel = () => {
-    // Clear form fields
     setQuote("");
     setAuthor("");
     setTags("");
@@ -346,6 +328,9 @@ const AddQuoteScreen = () => {
               onKeyUp={(event) => addTags(event)}
               placeholder="Press enter to add tags"
             />
+            {validationErrors.tag && (
+              <div className="error-message">{validationErrors.tag}</div>
+            )}
           </div>
 
           <div className="button-container">

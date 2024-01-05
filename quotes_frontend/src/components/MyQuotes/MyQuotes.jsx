@@ -3,8 +3,9 @@ import axios from "axios";
 import "./MyQuotes.css";
 import Swal from "sweetalert2";
 import quoteService from "../../services/quoteService";
-import QuoteComponent from "../Quotes/QuoteComponent";
-import "../Quotes/Quotes.css";
+import QuoteItem from "../shared/QuoteItem";
+import "../shared/Quotes.css";
+import EmptyQuote from "./EmptyQuote";
 
 const MyQuotes = () => {
   const [activeTab, setActiveTab] = useState("Added Quotes");
@@ -29,6 +30,10 @@ const MyQuotes = () => {
       showCancelButton: true,
       confirmButtonText: "Save",
       cancelButtonText: "Cancel",
+      customClass: {
+        container: "custom-swal-container",
+        popup: "custom-swal-popup",
+      },
     });
 
     if (formValues) {
@@ -45,12 +50,8 @@ const MyQuotes = () => {
     }
   };
 
-
-
   const saveEditedQuote = async (quoteId, editedQuote, editedAuthor) => {
     try {
-
-
       const response = await quoteService.saveEditedQuote(
         quoteId,
         editedQuote,
@@ -104,7 +105,6 @@ const MyQuotes = () => {
     }
   };
 
-
   const renderLikedQuotes = async () => {
     try {
       if (token && userId) {
@@ -115,12 +115,10 @@ const MyQuotes = () => {
           setTotalLikedQuotesCount(likedQuotes.length);
         } catch (error) {
           console.error("Error fetching liked quotes:", error);
-          // setAllLikedQuotes([]);
         }
       }
     } catch (error) {
       console.error("Error during liked quotes retrieval:", error);
-      // setAllLikedQuotes([]);
     }
   };
 
@@ -137,12 +135,10 @@ const MyQuotes = () => {
           setTotalDislikedQuotesCount(dislikedQuotes.length);
         } catch (error) {
           console.error("Error fetching disliked quotes:", error);
-          // setAlldislikedQuotes([]);
         }
       }
     } catch (error) {
       console.error("Error during disliked quotes retrieval:", error);
-      // setAlldislikedQuotes([]);
     }
   };
 
@@ -166,8 +162,6 @@ const MyQuotes = () => {
     }
   };
 
-  
-
   const deleteQuote = async (quoteId) => {
     const isConfirmed = await Swal.fire({
       title: "Are you sure?",
@@ -177,6 +171,10 @@ const MyQuotes = () => {
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes, delete it!",
+      customClass: {
+        container: "custom-swal-container",
+        popup: "custom-swal-popup",
+      },
     }).then((result) => {
       return result.isConfirmed;
     });
@@ -203,8 +201,6 @@ const MyQuotes = () => {
     }
   };
 
-  // const pageRoute = "2";
-
   return (
     <div className="outer-div">
       My Quotes
@@ -220,11 +216,9 @@ const MyQuotes = () => {
                 href="#"
               >
                 Added Quotes
-                {/* {activeTab === "Added Quotes" && ( */}
                 <span className="badge badge-secondary ml-1">
                   {totalAddedQuotesCount}
                 </span>
-                {/* )} */}
               </a>
             </li>
             <li className="nav-item">
@@ -236,11 +230,9 @@ const MyQuotes = () => {
                 href="#"
               >
                 Liked Quotes
-                {/* {activeTab === "Liked Quotes" && ( */}
                 <span className="badge badge-secondary ml-1">
                   {totalLikedQuotesCount}
                 </span>
-                {/* )} */}
               </a>
             </li>
             <li className="nav-item">
@@ -252,27 +244,21 @@ const MyQuotes = () => {
                 href="#"
               >
                 Disliked Quotes
-                {/* {activeTab === "Disliked Quotes" && ( */}
                 <span className="badge badge-secondary ml-1">
                   {totalDislikedQuotesCount}
                 </span>
-                {/* )} */}
               </a>
             </li>
           </ul>
         </div>
         <div className="quotes-display">
-          {activeTab === "Added Quotes"  && userAddedQuotes.length > 0 ?
+          {/* {activeTab === "Added Quotes" && userAddedQuotes.length > 0 ? (
             userAddedQuotes.map((quote, index) => (
               <QuoteComponent
                 key={index}
                 quote={quote}
                 userId={userId}
                 loggedInUserId={userId}
-                // getLikedUsers={getLikedUsers}
-                // getAllLikedUsers={getAllLikedUsers}
-                // getDislikedUsers={getDislikedUsers}
-                // getAllDislikedUsers={getAllDislikedUsers}
                 activeTab={activeTab}
                 deleteQuote={() => deleteQuote(quote.id)}
                 editQuote={() => handleEditClick(quote)}
@@ -282,15 +268,13 @@ const MyQuotes = () => {
                 totalDislikedQuotesCount={totalDislikedQuotesCount}
               />
             ))
-            : 
-            (
-              <div className=" d-flex align-items-center justify-content-center p-5">
+          ) : (
+            <div className=" d-flex align-items-center justify-content-center p-5">
               <div className="main-sub1">
                 <h4>No Quotes to display</h4>
               </div>
-              </div>
-            )
-            }
+            </div>
+          )}
 
           {activeTab === "Liked Quotes" &&
             allLikedQuotes.map((quote, index) => (
@@ -310,7 +294,52 @@ const MyQuotes = () => {
                 userId={userId}
                 loggedInUserId={userId}
               />
-            ))}
+            ))} */}
+            {/* <div className="quotes-display"> */}
+          {activeTab === "Added Quotes" && userAddedQuotes.length > 0 ? (
+            userAddedQuotes.map((quote, index) => (
+              <QuoteItem
+                key={index}
+                quote={quote}
+                userId={userId}
+                loggedInUserId={userId}
+                activeTab={activeTab}
+                deleteQuote={() => deleteQuote(quote.id)}
+                editQuote={() => handleEditClick(quote)}
+                editMode={editMode}
+                setEditQuote={setEditQuote}
+                totalLikedQuotesCount={totalLikedQuotesCount}
+                totalDislikedQuotesCount={totalDislikedQuotesCount}
+              />
+            ))
+          ) 
+          : 
+          activeTab === "Liked Quotes" && allLikedQuotes.length > 0 ? (
+            allLikedQuotes.map((quote, index) => (
+              <QuoteItem
+                key={index}
+                quote={quote}
+                userId={userId}
+                loggedInUserId={userId}
+              />
+            ))
+          ) 
+          : 
+          activeTab === "Disliked Quotes" &&
+            alldislikedQuotes.length > 0 ? (
+            alldislikedQuotes.map((quote, index) => (
+              <QuoteItem
+                key={index}
+                quote={quote}
+                userId={userId}
+                loggedInUserId={userId}
+              />
+            ))
+          ) : 
+          (
+            <EmptyQuote />
+          )}
+        {/* </div> */}
         </div>
       </div>
     </div>

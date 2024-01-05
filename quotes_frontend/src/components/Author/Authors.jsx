@@ -17,8 +17,12 @@ function Authors({ isAuthenticated }) {
         const arrayOfQuotes = response.data;
 
         if (Array.isArray(arrayOfQuotes) && arrayOfQuotes.length > 0) {
-          const uniqueAuthorsSet = new Set(arrayOfQuotes.map((quote) => quote.author));
-          const sortedAuthors = Array.from(uniqueAuthorsSet).sort((a, b) => a.localeCompare(b));
+          const uniqueAuthorsSet = new Set(
+            arrayOfQuotes.map((quote) => quote.author)
+          );
+          const sortedAuthors = Array.from(uniqueAuthorsSet).sort((a, b) =>
+            a.localeCompare(b)
+          );
 
           setAuthors(sortedAuthors);
         } else {
@@ -37,7 +41,7 @@ function Authors({ isAuthenticated }) {
     setSearchTerm(searchTerm);
 
     if (searchTerm === "") {
-      setFilteredAuthors([]); 
+      setFilteredAuthors([]);
     } else {
       const filteredAuthors = authors.filter((author) =>
         author.toLowerCase().startsWith(searchTerm.toLowerCase())
@@ -91,25 +95,19 @@ function Authors({ isAuthenticated }) {
           )}
         </div>
 
-        {authorQuotes.length > 0 ? (
-          <div>
-            <h2>Quotes by {searchTerm}</h2>
-            <div className="quotesforauthor">
-              <ul>
-                {authorQuotes.map((quote, index) => (
-                  <p key={index}>{quote.quote}</p>
-                ))}
-              </ul>
+        {
+          authorQuotes.length > 0 && (
+            <div>
+              <h2>Quotes by {searchTerm}</h2>
+              <div className="quotesforauthor">
+                <ul>
+                  {authorQuotes.map((quote, index) => (
+                    <p key={index}>{quote.quote}</p>
+                  ))}
+                </ul>
+              </div>
             </div>
-          </div>
-        ):
-        (
-          <div className="scrollable-page1 d-flex align-items-center justify-content-center p-5">
-          <div className="main-sub1">
-            <h4>No quotes are added hence no authors list is avaliable</h4>
-          </div>
-          </div>
-        )
+          )
         }
       </div>
     </div>
@@ -117,6 +115,3 @@ function Authors({ isAuthenticated }) {
 }
 
 export default Authors;
-
-
-

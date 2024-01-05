@@ -1,0 +1,212 @@
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:400italic);
+
+.title-div {
+  text-align: center;
+  color: black;
+  font-size: 34px;
+  font-weight: bolder;
+}
+
+blockquote {
+  font-size: 1em;
+  width: 60%;
+  margin: 50px auto;
+  font-family: Open Sans;
+  font-style: italic;
+  color: #555555;
+  padding: 1.2em 30px 1.2em 75px;
+  border-left: 8px solid #78c0a8;
+  line-height: 1.6;
+  position: relative;
+  background: #ededed;
+}
+
+blockquote::before {
+  font-family: Arial;
+  content: "\201C";
+  color: #78c0a8;
+  font-size: 4em;
+  position: absolute;
+  left: 10px;
+  top: -10px;
+}
+
+blockquote::after {
+  content: "";
+}
+
+blockquote .mainContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.QuoteReactions {
+  padding-top: 0.6rem;
+  font-size: medium;
+}
+
+blockquote .authorNameContainer {
+  position: absolute;
+  color: #333333;
+  font-style: normal;
+  font-weight: bold;
+  margin-top: 1em;
+  font-size: medium;
+  bottom: 0;
+  right: 0;
+  padding: 0.7rem;
+}
+blockquote .userAdded {
+  position: absolute;
+  margin-left: 0.4rem;
+  font-size: 1.7rem;
+  top: 0;
+  right: 0;
+  padding: 0.7rem;
+}
+
+button {
+  border: none;
+}
+
+button:hover {
+  border: none;
+}
+
+.auth-container {
+  margin-top: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+  border-radius: 8pxrgb (255, 255, 255) d border-radius for rounded corners;
+}
+
+.first-div {
+  font-size: 18px;
+  margin-right: 5px;
+}
+
+.form-control {
+  justify-content: space-between;
+  margin-left: 2px;
+  height: 35px;
+  margin-right: 5px;
+}
+
+.btn {
+  margin-right: 5px;
+  height: 35px;
+  width: 69px;
+}
+
+.addQuoteBtn {
+  margin-left: 170px;
+  background-color: #d99a12;
+  color: white;
+  border-radius: 8px;
+  padding: 5px 10px;
+  text-decoration: none;
+  width: 120px;
+}
+
+.searchbtn {
+  background-color: #d99a12;
+  border: none;
+  color: white;
+  margin-left: 6px;
+  padding: 0px;
+}
+.refbtn {
+  background-color: #d99a12;
+  border: none;
+  color: white;
+  padding: 0px;
+}
+
+.searchbtn:hover,
+.refbtn:hover,
+.addQuoteBtn:hover {
+  background-color: #77c51e;
+  color: #fefefe;
+}
+
+.filter-div {
+  margin-right: 5px;
+}
+
+.tooltip {
+  position: absolute;
+  background-color: white;
+  border: 1px solid #ccc;
+  padding: 8px;
+  z-index: 1;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.tooltip ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.tooltip li {
+  margin-bottom: 5px;
+}
+
+.user_reactioncount {
+  display: inline-block;
+  position: relative;
+}
+
+.countbtn {
+  background-color: #007bff;
+  color: #ffffff;
+  border: 1px solid #007bff;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1000;
+  display: none;
+  float: left;
+  min-width: 160px;
+  padding: 8px 0;
+  margin: 2px 0 0;
+  font-size: 14px;
+  text-align: left;
+  background-color: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 4px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+}
+
+.dropdown-menu p {
+  display: block;
+  width: 100%;
+  padding: 8px 16px;
+  clear: both;
+  color: #333333;
+  margin: 0;
+}
+
+.dropdown-menu p:hover {
+  background-color: #f8f9fa;
+}
+
+.dropdown-menu p:focus,
+.dropdown-menu p:active {
+  background-color: #e9ecef;
+}
+
+.quoteContainer {
+  width: 90%;
+  font-size: 18px;
+}

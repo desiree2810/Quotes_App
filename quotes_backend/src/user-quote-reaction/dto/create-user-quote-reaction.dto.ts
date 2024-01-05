@@ -1,16 +1,17 @@
-import { IsBoolean } from 'class-validator';
+import { IsBoolean, IsOptional } from 'class-validator';
 
 export class CreateUserQuoteReactionDto {
-    
-    // @IsBoolean()
-    like: boolean;
+  @IsBoolean()
+  @IsOptional()
+  like: boolean;
 
-    // @IsBoolean()
-    dislike: boolean;
+  @IsBoolean()
+  @IsOptional()
+  dislike: boolean;
 
-    quoteId: string;
+  quoteId: string;
 
-    userId: string
+  userId: string;
   static like: boolean;
   static dislike: boolean;
 }

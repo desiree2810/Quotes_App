@@ -1,16 +1,6 @@
 import { useState } from "react";
-import "./App.css";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Quotes from "./components/Quotes/Quotes";
-import Homescreen from "./components/Homescreen/Homescreen";
-import Authors from "./components/Author/Authors";
-import Signup from "./components/Auth/Signup";
-import Login from "./components/Auth/Login";
-import AddQuoteScreen from "./components/AddQuoteScreen/AddQuoteScreen";
-import MyQuotes from "./components/MyQuotes/MyQuotes";
+import { BrowserRouter as Router} from "react-router-dom";
 import Navbar from "./components/Header/Navbar/Navbar";
-import ProtectedRoute from "./routes/ProtectedRoute";
-import PageNotFound from "./Pages/ErrorPage/PageNotFound";
 import AllRoutes from "./routes/AllRoutes";
 
 function App() {

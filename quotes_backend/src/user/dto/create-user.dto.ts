@@ -2,10 +2,8 @@ import {
     IsEmail,
     IsNotEmpty,
     IsString,
-    MaxLength,
-    MinLength,
+    MinLength
   } from 'class-validator';
-import { Unique } from 'typeorm';
   
   export class CreateUserDto {
     @IsString()
@@ -22,14 +20,9 @@ import { Unique } from 'typeorm';
   
     @IsString()
     @MinLength(4)
-    // @MaxLength(10)
     @IsNotEmpty()
     password: string;
-  
-    // @IsString()
-    // @IsNotEmpty()
-    // role: string;
-  
+    
     created_at: Date;
   
     updated_at: Date;

@@ -1,4 +1,4 @@
-import './Quotes.css';
+import "./Quotes.css";
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -6,7 +6,7 @@ import {
   faThumbsDown,
   faUserPlus,
   faPenToSquare,
-  faTrashCan
+  faTrashCan,
 } from "@fortawesome/free-solid-svg-icons";
 
 const QuoteComponent = ({
@@ -22,8 +22,7 @@ const QuoteComponent = ({
   activeTab,
   deleteQuote,
   editQuote,
-  loggedId,
-pageRoute
+  loggedId
 }) => {
   return (
     <blockquote>
@@ -82,11 +81,9 @@ pageRoute
         </div>
         <div className="authorNameContainer">-{quote.author}</div>
         <div className="userAdded" style={{ color: "#674ea7" }}>
-            <button style={{ color: "#674ea7" }}>
-              {quote.userId === loggedId && (
-                <FontAwesomeIcon icon={faUserPlus} />
-            )}
-            </button>
+          <button style={{ color: "#674ea7" }}>
+            {quote.userId === loggedId && <FontAwesomeIcon icon={faUserPlus} />}
+          </button>
           <button style={{ color: "#674ea7", cursor: "pointer" }}>
             {quote.userId === loggedInUserId && (
               <FontAwesomeIcon

@@ -19,7 +19,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
 
     // comparing password hash
     const isMatch = await bcrypt.compare(password, user.password);
-    
+
     if (user && isMatch) return user;
     if (user == undefined)
       throw new UnauthorizedException('User Not Found : ' + email);

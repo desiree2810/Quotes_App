@@ -1,26 +1,25 @@
-import { IsNotEmpty, IsNumber, IsString } from "class-validator";
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateQuoteDto {
+  @IsNotEmpty()
+  @IsString()
+  quote: string;
 
-    @IsNotEmpty()
-    @IsString()
-    quote: string;
+  @IsNotEmpty()
+  @IsString()
+  author: string;
 
-    @IsNotEmpty()
-    @IsString()
-    author: string;
+  @IsNumber()
+  @IsOptional()
+  like: number;
 
-    // @IsNotEmpty()
-    // @IsNumber()
-    like: number;
+  @IsNumber()
+  @IsOptional()
+  dislikes: number;
 
-    // @IsNotEmpty()
-    // @IsNumber()
-    dislikes: number;
+  @IsNotEmpty()
+  @IsString()
+  tag: string;
 
-    @IsNotEmpty()
-    @IsString()
-    tag: string;
-    
-    userId:string
+  userId: string;
 }

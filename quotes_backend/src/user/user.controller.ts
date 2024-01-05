@@ -1,19 +1,14 @@
 import {
   Controller,
   Get,
-  Post,
   Body,
   Patch,
   Param,
   Delete,
   Request,
-  ValidationPipe,
-  HttpException,
-  HttpStatus,
-  UseGuards
+  UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { JwtAuthGuard } from 'src/auth/guard/jwt.guard';
 
@@ -26,11 +21,6 @@ export class UserController {
   findAll() {
     return this.userService.findAll();
   }
-
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.userService.findOne(id);
-  // }
 
   @Patch()
   update(@Request() req: any, @Body() updateUserDto: UpdateUserDto) {
@@ -64,22 +54,22 @@ export class UserController {
       const quotes = await this.userService.fetchAllQuotesDislikedByUser(id);
       return { quotes };
     } catch (error) {
-      return { 
-       error: error.message };
+      return {
+        error: error.message,
+      };
     }
   }
 
-//Fetches the quotes liked by the user
-@Get(':id/favourite-quotes')
-async fetchAllQuotesLikedByUser(@Param('id') id: string) {
-  try {
-    const quotes = await this.userService.fetchAllQuotesLikedByUser(id);
-    return { quotes };
-  } catch (error) {
-    return { 
-     error: error.message };
+  //Fetches the quotes liked by the user
+  @Get(':id/favourite-quotes')
+  async fetchAllQuotesLikedByUser(@Param('id') id: string) {
+    try {
+      const quotes = await this.userService.fetchAllQuotesLikedByUser(id);
+      return { quotes };
+    } catch (error) {
+      return {
+        error: error.message,
+      };
+    }
   }
-}
-
-
 }
