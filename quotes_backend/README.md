@@ -13,26 +13,6 @@ Welcome to the Quotes App – a simple and intuitive platform where users can sh
 **Database:** PostgreSQL
 
 
-## Environment Variables
-
-To run the backend part of project, you will need to add the following environment variables to your .env file
-
-`DB_HOST`
-
-`DB_PORT`
-
-`DB_USERNAME`
-
-`DB_PASSWORD`
-
-`DB_DATABASE`
-
-`DB_SYNC`
-
-`JWT_KEY` 
-
-`JWT_EXPIRE`
-
 ## Installation
 
 Install the project with npm
@@ -44,16 +24,16 @@ To install all dependencies on backend:
   npm install
 ```
 
-To run backend:
-```bash
-npm run start:dev
-```
-
-
 ## Migrations in PostgreSQL:
 NOTE: First create a databse with the same name that you have given in the env file (`DB_DATABASE`)
 ```bash
 npm run migration:generate -- db/migrations/FirstMigration
 npm run migration:run
 ```
-NOTE: in migration:generate command "FirstMigration" is the name of the file that you would like to give
+NOTE: in migration:generate command "FirstMigration" is the name of the file that you would like to give.
+
+
+To run backend:
+```bash
+npm run start:dev
+```

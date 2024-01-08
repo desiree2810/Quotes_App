@@ -8,9 +8,10 @@ import { Quote } from 'src/quotes/entities/quote.entity';
 import { UserQuoteReaction } from 'src/user-quote-reaction/entities/user-quote-reaction.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UserRepository, User, Quote, UserQuoteReaction])],
+  imports: [TypeOrmModule.forFeature([ User, Quote, UserQuoteReaction])],
   controllers: [UserController],
-  providers: [UserService],
-  exports: [UserService],
+  providers: [UserService,UserRepository],
+  exports: [UserService,UserRepository],
 })
 export class UserModule {}
+

@@ -19,7 +19,6 @@ import { UserQuoteReactionRepository } from 'src/user-quote-reaction/user-quote-
 @Injectable()
 export class QuotesService {
   constructor(
-    @InjectRepository(Quote)
     private readonly quoteRepository: QuoteRepository,
     @InjectRepository(UserQuoteReaction)
     private readonly userQuoteReactionRepository: UserQuoteReactionRepository,
@@ -38,55 +37,21 @@ export class QuotesService {
       tag: createQuoteDto.tag,
       userId: id,
     });
-    console.log(quote);
 
-    return this.quoteRepository.save(quote);
+    return this.quoteRepository.createQuote(quote);
   }
-
-  // create(@Body() createQuoteDto: CreateQuoteDto, id: any) {
-  //   console.log("hello");
-  //   return this.quoteRepository.createQuote(createQuoteDto, id);
-  
-  // }
-
-
-
-  // async findAll(filter?: {
-  //   author?: string;
-  //   tag?: string;
-  //   quote?: string;
-  // }): Promise<Quote[]> {
-  //   if (!filter) {
-  //     return this.quoteRepository.find();
-  //   }
-
-  //   const whereClause: any = {};
-
-  //   if (filter.author) {
-  //     whereClause.author = ILike(`%${filter.author}%`);
-  //   }
-  //   if (filter.tag) {
-  //     whereClause.tag = ILike(`%${filter.tag}%`);
-  //   }
-  //   if (filter.quote) {
-  //     whereClause.quote = ILike(`%${filter.quote}%`);
-  //   }
-
-  //   return this.quoteRepository.find({
-  //     where: whereClause,
-  //   });
-  // }
 
   async findAll(filter?: {
     author?: string;
     tag?: string;
     quote?: string;
   }): Promise<Quote[]> {
+    const whereClause: any = {};
+
     if (!filter) {
-      return this.quoteRepository.find();
+      return this.quoteRepository.findAllQuotes(filter, whereClause);
     }
 
-    const whereClause: any = {};
 
     if (filter.author) {
       whereClause.author = ILike(`%${filter.author}%`);
@@ -105,10 +70,7 @@ export class QuotesService {
     if (filter.quote) {
       whereClause.quote = ILike(`%${filter.quote}%`);
     }
-
-    return this.quoteRepository.find({
-      where: whereClause,
-    });
+    return this.quoteRepository.findAllQuotes(filter, whereClause);
   }
 
   async findOne(@Param('id') id: string): Promise<Quote> {
@@ -116,7 +78,7 @@ export class QuotesService {
     if (!quote) {
       throw new NotFoundException(`Quote with ID #${id} not found`);
     }
-    return quote;
+    return this.quoteRepository.findQuoteById(id)
   }
 
   async update(id: string, updateQuoteDto: UpdateQuoteDto) {
@@ -126,7 +88,7 @@ export class QuotesService {
     }
 
     Object.assign(quote, updateQuoteDto);
-    return await this.quoteRepository.save(quote);
+    return await this.quoteRepository.updateQuote(id,quote);
   }
 
   async remove(id: string) {
@@ -134,10 +96,9 @@ export class QuotesService {
     if (!quote) {
       throw new NotFoundException(`Quote #${id} not found`);
     }
-
     await this.userQuoteReactionRepository.delete({ quoteId: id }); //delete from userQuoteReactionRepository first
     await this.quoteRepository.remove(quote); //then delete from quoteRepository
-    return `Quote with ID ${id} deleted successfully`;
+    return this.quoteRepository.removeQuote(id);
   }
 
   // fetch all authors from quote
@@ -148,8 +109,7 @@ export class QuotesService {
       .getRawMany();
 
     console.log(authors);
-
-    return authors.map((entry) => entry.author);
+    return this.quoteRepository.getAllAuthorsList(authors)
   }
 
   // fetch all quotes by authername
@@ -159,9 +119,7 @@ export class QuotesService {
       .where('quote.author = :author', { author: author })
       .getMany();
 
-    console.log(quotes);
-
-    return quotes;
+    return this.quoteRepository.getAllQuotesByAuthor(quotes);
   }
 
   // fetch tags from quote
@@ -171,14 +129,11 @@ export class QuotesService {
       .select('DISTINCT tag')
       .getRawMany();
 
-    console.log(tags);
-
-    return tags.map((entry) => entry.tag);
+    return this.quoteRepository.getAllQuotesByTag(tags);
   }
 
   //increment count by 1 for liked quote
   async likeQuote(id: string, user_id: string) {
-    // check if like exists
     const existingLike = await this.userQuoteReactionRepository.findOne({
       where: { quoteId: id, userId: user_id, like: true },
     });
@@ -189,7 +144,6 @@ export class QuotesService {
       );
     }
 
-    // if like doesnt exist then proceed further
     await this.updatelikeReactionCount(id, 'like', 1, user_id);
   }
 
@@ -199,7 +153,7 @@ export class QuotesService {
     increment: number,
     userId: string,
   ) {
-    const quote = await this.quoteRepository.findOne({ where: { id: id } });
+    const quote = this.quoteRepository.findQuoteById(id)
 
     if (!quote) {
       throw new NotFoundException(`Quote with ID ${id} not found`);
@@ -248,7 +202,7 @@ export class QuotesService {
     increment: number,
     userId: string,
   ) {
-    const quote = await this.quoteRepository.findOne({ where: { id: id } });
+    const quote = this.quoteRepository.findQuoteById(id)
 
     if (!quote) {
       throw new NotFoundException(`Quote with ID ${id} not found`);
@@ -275,7 +229,7 @@ export class QuotesService {
     decrement: number,
     userId: string,
   ) {
-    const quote = await this.quoteRepository.findOne({ where: { id: id } });
+    const quote = this.quoteRepository.findQuoteById(id)
 
     if (!quote) {
       throw new NotFoundException(`Quote with ID ${id} not found`);
@@ -301,7 +255,7 @@ export class QuotesService {
     decrement: number,
     userId: string,
   ) {
-    const quote = await this.quoteRepository.findOne({ where: { id: id } });
+    const quote = this.quoteRepository.findQuoteById(id);
 
     if (!quote) {
       throw new NotFoundException(`Quote with ID ${id} not found`);
@@ -369,8 +323,8 @@ export class QuotesService {
       eachQuote.like = likedCount;
       eachQuote.dislikes = dislikedCount;
 
-      eachQuote.like = likedCount;
-      eachQuote.dislikes = dislikedCount;
+      // eachQuote.like = likedCount;
+      // eachQuote.dislikes = dislikedCount;
 
       await this.quoteRepository.save(eachQuote);
     }

@@ -17,7 +17,6 @@ export class User extends AuditingEntity{
   @Column()
   password: string;
 
-
   @Column({ default: true }) // default to active
     isActive: boolean;
 

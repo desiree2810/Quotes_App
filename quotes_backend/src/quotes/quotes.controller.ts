@@ -98,7 +98,7 @@ export class QuotesController {
       await this.quotesService.dislikeQuote(id, userId);
       return { message: 'Quote disliked successfully' };
     } catch (error) {
-      return { message: 'Error liking the quote', error: error.message };
+      return { message: 'Error disliked the quote', error: error.message };
     }
   }
 
@@ -114,7 +114,7 @@ export class QuotesController {
       await this.quotesService.remove_likeQuote(id, userId);
       return { message: 'Quote liked decremented' };
     } catch (error) {
-      return { message: 'Error liking the quote', error: error.message };
+      return { message: 'Error decrementing like for quote', error: error.message };
     }
   }
 
@@ -130,7 +130,7 @@ export class QuotesController {
       await this.quotesService.remove_dislikeQuote(id, userId);
       return { message: 'Quote disliked decremented' };
     } catch (error) {
-      return { message: 'Error liking the quote', error: error.message };
+      return { message: 'Error decrementing dislike for quote', error: error.message };
     }
   }
 

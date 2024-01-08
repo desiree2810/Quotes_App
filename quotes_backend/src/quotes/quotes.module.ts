@@ -1,5 +1,3 @@
-
-
 import { Module } from '@nestjs/common';
 import { QuotesService } from './quotes.service';
 import { QuotesController } from './quotes.controller';
@@ -16,7 +14,7 @@ import { QuoteRepository } from './quotes.repository';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([QuoteRepository,Quote, UserQuoteReaction, User]),
+    TypeOrmModule.forFeature([Quote, UserQuoteReaction, User]),
     ScheduleModule.forRoot(),
     UserModule,
     ThrottlerModule.forRoot([
@@ -33,6 +31,10 @@ import { QuoteRepository } from './quotes.repository';
       provide: APP_GUARD,
       useClass: ThrottlerGuard,
     },
+    QuoteRepository
   ],
+
+  exports: [QuoteRepository],
+
 })
 export class QuotesModule {}

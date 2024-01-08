@@ -29,7 +29,7 @@ export class UserController {
   update(@Request() req: any, @Body() updateUserDto: UpdateUserDto) {
     const userId = req.user.userId; ///to get userID
     console.log(userId);
-    return this.userService.update(userId, updateUserDto);
+    return this.userService.updateUser(userId, updateUserDto);
   }
 
   @Delete(':id')

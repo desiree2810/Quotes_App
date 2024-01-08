@@ -1,44 +1,70 @@
-import { EntityRepository, Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { User } from './entities/user.entity';
-import { CreateUserDto } from './dto/create-user.dto';
-import * as bcrypt from 'bcrypt';
-import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable } from '@nestjs/common';
 
-// @Injectable()
-@EntityRepository(User)
+@Injectable()
 export class UserRepository extends Repository<User> {
+  constructor(private dataSource: DataSource) {
+    super(User, dataSource.createEntityManager());
+  }
 
-    // async createUser(createUserDto: CreateUserDto): Promise<User> {
-    //     const saltOrRounds = 10;
-    //     const user: User = new User();
-    //     user.first_name = createUserDto.first_name;
-    //     user.last_name = createUserDto.last_name;
-    //     user.email = createUserDto.email;
-    //     user.password = await bcrypt.hash(createUserDto.password, saltOrRounds);
-    //     user.created_at = createUserDto.created_at;
-    //     user.updated_at = createUserDto.updated_at;
-    //     return this.save(user);
-    //   }
-    
-    
-    //aarti
-    // async createUser(user){
+  async createUser(user: User) {
+    const saveUser = this.save(user);
+    return saveUser;
+  }
 
-    //    return this.save(user);
-    // }
+  async findAllUsers() {
+    return this.find({ relations: {} });
+  }
 
-    // async findinguser(id){
-    //     return await this.findOne({
-    //         where: { id },
-    //       });
-    // }
-    // async findinguseremail(email){
-    //     // console.log(email)
-    //     const newvar = this.findOne({ where: { email: email } });
-    //     // console.log(newvar)
-    //     return await newvar;
-    // }
+  // not being used should we remove this?
+  async findOneUser(id: string) {
+    return await this.findOne({ where: { id } });
+  }
 
-    
+  async findEmailOfUser(email) {
+    return await this.findOne({ where: { email: email } });
+  }
+
+  async updateUser(id: string, user: User) {
+    return this.save(user);
+  }
+
+  async softDeleteUser(id: string, user) {
+    if (!user) {
+      return {
+        message: `User with ID ${id} not found`,
+      };
+    } else {
+      return {
+        message: `User with ID ${id} is now inactive.`,
+      };
+    }
+  }
+
+  async fetchAllQuotesByUser(id: string, allQuotes) {
+    if (allQuotes.length === 0) {
+      return { message: `User with ID ${id} has added no quotes.` };
+    } else {
+      return allQuotes;
+    }
+  }
+
+  async fetchAllQuotesListDislikedByUser(id: string, AllDislikedQuotes) {
+    if (AllDislikedQuotes.length === 0) {
+      return { message: `User with ID ${id} has not disliked any quotes.` };
+    } else {
+      return AllDislikedQuotes.map(
+        (AllDislikedQuote) => AllDislikedQuote.quote,
+      );
+    }
+  }
+
+  async fetchAllQuotesListLikedByUser(id: string, AllLikedQuotes) {
+    if (AllLikedQuotes.length === 0) {
+      return { message: `User with ID ${id} has not liked any quotes.` };
+    } else {
+      return AllLikedQuotes.map((AllLikedQuote) => AllLikedQuote.quote);
+    }
+  }
 }
