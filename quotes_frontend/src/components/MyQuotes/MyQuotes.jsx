@@ -7,6 +7,7 @@ import QuoteItem from "../shared/QuoteItem";
 import "../shared/Quotes.css";
 import EmptyQuote from "./EmptyQuote";
 import { getToken, getUserId } from "../../utils/localstorageUtils";
+import { useNavigate } from "react-router-dom";
 
 const MyQuotes = () => {
   const [activeTab, setActiveTab] = useState("Added Quotes");
@@ -19,36 +20,19 @@ const MyQuotes = () => {
   const [totalDislikedQuotesCount, setTotalDislikedQuotesCount] = useState(0);
   const [editMode, setEditMode] = useState(false);
   const [editQuote, setEditQuote] = useState({ quote: "", author: "" });
+  const [showEditForm, setShowEditForm] = useState(false);
+  const [selectedQuote, setSelectedQuote] = useState({ quote: "", author: "" });
 
-  const handleEditClick = async (quote) => {
-    const { value: formValues } = await Swal.fire({
-      title: "Edit Quote",
-      html: `
-      <textarea id="swal-input1" class="swal1-input" placeholder="${quote.quote}" rows="4" >${quote.quote}</textarea>
-      <input id="swal-input2" class="swal2-input" placeholder="${quote.author}" value="${quote.author}" />
-    `,
-      focusConfirm: false,
-      showCancelButton: true,
-      confirmButtonText: "Save",
-      cancelButtonText: "Cancel",
-      customClass: {
-        container: "custom-swal-container",
-        popup: "custom-swal-popup",
-      },
-    });
+  const handleEditClick = (quote) => {
+    // Set the selected quote and show the edit form
+    setSelectedQuote(quote);
+    setShowEditForm(true);
+  };
 
-    if (formValues) {
-      const editedQuote = document.getElementById("swal-input1").value;
-      const editedAuthor = document.getElementById("swal-input2").value;
-
-      if (editedQuote && editedAuthor) {
-        setEditQuote({ quote: editedQuote, author: editedAuthor });
-        setEditMode(true);
-        saveEditedQuote(quote.id, editedQuote, editedAuthor);
-        console.log("editedQuote = ", editedQuote);
-        console.log("editedAuthor = ", editedAuthor);
-      }
-    }
+  const handleEditFormClose = () => {
+    // Reset the selected quote and hide the edit form
+    setSelectedQuote({ quote: "", author: "" });
+    setShowEditForm(false);
   };
 
   const saveEditedQuote = async (quoteId, editedQuote, editedAuthor) => {
@@ -69,8 +53,8 @@ const MyQuotes = () => {
     }
   };
 
-  const token = getToken()
-  const userId = getUserId()
+  const token = getToken();
+  const userId = getUserId();
 
   useEffect(() => {
     fetchQuotes();
@@ -203,12 +187,29 @@ const MyQuotes = () => {
   };
 
   const itemName = "quotes";
+  const handleSaveEditedQuote = async () => {
+    try {
+      const response = await quoteService.saveEditedQuote(
+        selectedQuote.id,
+        selectedQuote.quote,
+        selectedQuote.author,
+        token
+      );
+      console.log("response.data = ", response);
 
+      handleEditFormClose();
+
+      await fetchQuotes();
+    } catch (error) {
+      console.error("Error during quote update:", error);
+    }
+  };
 
   return (
     <div className="outer-div">
       My Quotes
       <div className="main-div">
+        {showEditForm && <div className="overlay"></div>}
         <div className="navbar-div">
           <ul className="nav nav-pills nav-fill">
             <li className="nav-item">
@@ -256,7 +257,6 @@ const MyQuotes = () => {
           </ul>
         </div>
         <div className="quotes-display">
-          
           {activeTab === "Added Quotes" && userAddedQuotes.length > 0 ? (
             userAddedQuotes.map((quote, index) => (
               <QuoteItem
@@ -273,9 +273,7 @@ const MyQuotes = () => {
                 totalDislikedQuotesCount={totalDislikedQuotesCount}
               />
             ))
-          ) 
-          : 
-          activeTab === "Liked Quotes" && allLikedQuotes.length > 0 ? (
+          ) : activeTab === "Liked Quotes" && allLikedQuotes.length > 0 ? (
             allLikedQuotes.map((quote, index) => (
               <QuoteItem
                 key={index}
@@ -284,9 +282,7 @@ const MyQuotes = () => {
                 loggedInUserId={userId}
               />
             ))
-          ) 
-          : 
-          activeTab === "Disliked Quotes" &&
+          ) : activeTab === "Disliked Quotes" &&
             alldislikedQuotes.length > 0 ? (
             alldislikedQuotes.map((quote, index) => (
               <QuoteItem
@@ -296,9 +292,35 @@ const MyQuotes = () => {
                 loggedInUserId={userId}
               />
             ))
-          ) : 
-          (
-            <EmptyQuote  itemName={itemName}/>
+          ) : (
+            <EmptyQuote itemName={itemName} />
+          )}
+          {showEditForm && (
+            <div className="edit-form-container">
+              <h2>Edit Quote</h2>
+              <textarea
+                value={selectedQuote.quote}
+                onChange={(e) =>
+                  setSelectedQuote({ ...selectedQuote, quote: e.target.value })
+                }
+                rows="4"
+              />
+              <input
+                type="text"
+                value={selectedQuote.author}
+                onChange={(e) =>
+                  setSelectedQuote({ ...selectedQuote, author: e.target.value })
+                }
+              />
+              <div className="btn-container">
+                <button className="save-button" onClick={handleSaveEditedQuote}>
+                  Save
+                </button>
+                <button className="cancel-button" onClick={handleEditFormClose}>
+                  Cancel
+                </button>
+              </div>
+            </div>
           )}
         </div>
       </div>

@@ -21,6 +21,7 @@ export class UserService {
     private readonly QuoteRepository: QuoteRepository,
     @InjectRepository(UserQuoteReaction)
     private readonly UserQuoteReactionRepository: UserQuoteReactionRepository,
+    
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
@@ -36,6 +37,10 @@ export class UserService {
     user.updated_at = createUserDto.updated_at;
     return this.userRepository.save(user);
   }
+
+  // async create(createUserDto: CreateUserDto): Promise<User> {
+  //   return this.userRepository.createUser(createUserDto);
+  // }
 
   findAll(): Promise<User[]> {
     return this.userRepository.find({

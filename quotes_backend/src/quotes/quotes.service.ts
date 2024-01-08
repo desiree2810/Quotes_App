@@ -10,7 +10,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Quote } from './entities/quote.entity';
 import { UserQuoteReaction } from 'src/user-quote-reaction/entities/user-quote-reaction.entity';
 import { User } from 'src/user/entities/user.entity';
-import { Repository, ILike } from 'typeorm';
+import { Repository, ILike, Like } from 'typeorm';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { UserService } from 'src/user/user.service';
 import { QuoteRepository } from './quotes.repository';
@@ -43,6 +43,40 @@ export class QuotesService {
     return this.quoteRepository.save(quote);
   }
 
+  // create(@Body() createQuoteDto: CreateQuoteDto, id: any) {
+  //   console.log("hello");
+  //   return this.quoteRepository.createQuote(createQuoteDto, id);
+  
+  // }
+
+
+
+  // async findAll(filter?: {
+  //   author?: string;
+  //   tag?: string;
+  //   quote?: string;
+  // }): Promise<Quote[]> {
+  //   if (!filter) {
+  //     return this.quoteRepository.find();
+  //   }
+
+  //   const whereClause: any = {};
+
+  //   if (filter.author) {
+  //     whereClause.author = ILike(`%${filter.author}%`);
+  //   }
+  //   if (filter.tag) {
+  //     whereClause.tag = ILike(`%${filter.tag}%`);
+  //   }
+  //   if (filter.quote) {
+  //     whereClause.quote = ILike(`%${filter.quote}%`);
+  //   }
+
+  //   return this.quoteRepository.find({
+  //     where: whereClause,
+  //   });
+  // }
+
   async findAll(filter?: {
     author?: string;
     tag?: string;
@@ -58,8 +92,16 @@ export class QuotesService {
       whereClause.author = ILike(`%${filter.author}%`);
     }
     if (filter.tag) {
-      whereClause.tag = ILike(`%${filter.tag}%`);
+      // Split tags by spaces and create conditions for each partial tag
+      const tagsArray = filter.tag.split(' ').filter(tag => tag.trim() !== '');
+
+      // Sort the tags to make the order not matter
+      const sortedTagsArray = tagsArray.sort();
+
+      // Use the Like operator to match each partial tag
+      whereClause.tag = Like(`%${sortedTagsArray.join('%')}%`);
     }
+
     if (filter.quote) {
       whereClause.quote = ILike(`%${filter.quote}%`);
     }

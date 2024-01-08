@@ -92,7 +92,7 @@ const QuoteComponent = ({
               </button>
             </span>
 
-            <span>tags: {quote.tag}</span>
+            <spans style={{fontSize:"0.8rem"}}>tags: {quote.tag}</spans>
           </div>
         </div>
         <div className="authorNameContainer">-{quote.author}</div>
