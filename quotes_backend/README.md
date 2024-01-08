@@ -56,4 +56,4 @@ NOTE: First create a databse with the same name that you have given in the env f
 npm run migration:generate -- db/migrations/FirstMigration
 npm run migration:run
 ```
-
+NOTE: in migration:generate command "FirstMigration" is the name of the file that you would like to give

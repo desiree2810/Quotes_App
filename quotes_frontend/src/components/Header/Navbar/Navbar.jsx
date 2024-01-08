@@ -1,10 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import "./Navbar.css";
+import { getToken, getUserId } from "../../../utils/localstorageUtils";
 
 function Navbar({ isAuthenticated, setIsAuthenticated }) {
-  let token = localStorage.getItem("token");
-  let userId = localStorage.getItem("userId");
+  let token = getToken()
+  let userId = getUserId()
   let userFirstName = localStorage.getItem("userFirstName");
   let userLastName = localStorage.getItem("userLastName");
 
@@ -87,7 +88,16 @@ function Navbar({ isAuthenticated, setIsAuthenticated }) {
                 {userFirstName} {userLastName}
               </div>
               <div className="dropdown-menu logoutbtn">
-                <Link className="dropdown-item " onClick={handleLogout} style={{alignItems:"center", alignContent:"center", justifyContent:"center", textAlign:"center", }}>
+                <Link
+                  className="dropdown-item "
+                  onClick={handleLogout}
+                  style={{
+                    alignItems: "center",
+                    alignContent: "center",
+                    justifyContent: "center",
+                    textAlign: "center",
+                  }}
+                >
                   Logout
                 </Link>
               </div>

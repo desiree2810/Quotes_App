@@ -9,6 +9,7 @@ import {
   Delete,
   Query,
   UseGuards,
+  HttpCode,
 } from '@nestjs/common';
 import { QuotesService } from './quotes.service';
 import { CreateQuoteDto } from './dto/create-quote.dto';
@@ -64,6 +65,7 @@ export class QuotesController {
   //to extract the userid from the jwt token--> to like a quote using patch request
   @UseGuards(JwtAuthGuard)
   @Patch(':id/like/up')
+  @HttpCode(204)
   async likeQuote(@Request() req: any, @Param('id') id: string) {
     const userId = req.user.userId; //to get userID
     console.log(userId);
@@ -78,6 +80,7 @@ export class QuotesController {
 
   @UseGuards(JwtAuthGuard)
   @Patch(':id/dislike/up')
+  @HttpCode(204)
   async dislikeQuote(@Request() req: any, @Param('id') id: string) {
     const userId = req.user.userId; //to get userID
     console.log(userId);
@@ -92,6 +95,7 @@ export class QuotesController {
 
   @UseGuards(JwtAuthGuard)
   @Patch(':id/like/down')
+  @HttpCode(204)
   async remove_likeQuote(@Request() req: any, @Param('id') id: string) {
     const userId = req.user.userId;
     console.log(userId);
@@ -106,6 +110,7 @@ export class QuotesController {
 
   @UseGuards(JwtAuthGuard)
   @Patch(':id/dislike/down')
+  @HttpCode(204)
   async remove_dislikeQuote(@Request() req: any, @Param('id') id: string) {
     const userId = req.user.userId; ///to get userID
     console.log(userId);

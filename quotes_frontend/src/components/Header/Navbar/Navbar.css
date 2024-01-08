@@ -27,6 +27,8 @@
   cursor: pointer;
   color: rgb(238, 223, 223);
   margin-left: auto;
+  text-align: center;
+  justify-content: center;
 }
 
 .dropdown-toggle:hover {
@@ -36,10 +38,4 @@
 .dropdown-item:active {
   background-color: rgb(255, 255, 255);
   color: black !important;
-}
-
-.namebtn {
-  margin-right: 50px; 
-
-
 }

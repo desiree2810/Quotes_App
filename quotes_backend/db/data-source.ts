@@ -1,47 +1,30 @@
 import { DataSource, DataSourceOptions } from 'typeorm';
 import { ConfigService } from '@nestjs/config';
+import * as dotenv from 'dotenv';
+
+dotenv.config();
 
 export const dataSourceOptions = async (
   configService: ConfigService,
 ): Promise<DataSourceOptions> => ({
   type: 'postgres',
-  host: configService.get<string>('DB_HOST'),
-  port: configService.get<number>('DB_PORT'),
-  username: configService.get<string>('DB_USERNAME','postgres'),
-  password: configService.get<string>('DB_PASSWORD','root'),
-  database: configService.get<string>('DB_DATABASE'),
-  synchronize: configService.get<boolean>('DB_SYNC'),
+  host: process.env.DB_HOST,
+  port: parseInt(process.env.DB_PORT),
+  username: process.env.DB_USERNAME,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_DATABASE,
+  synchronize: process.env.DB_SYNC === 'true',
   entities: ['dist/**/*.entity.js'],
   migrations: ['dist/db/migrations/*.js'],
 //   logging: true,
 });
 
-// const dataSource = new DataSource(await dataSourceOptions(new ConfigService()));
-// export default dataSource;
-
 async function createDataSource() {
   const options = await dataSourceOptions(new ConfigService());
   const dataSource = new DataSource(options);
+  console.log(dataSource)
   return dataSource;
 }
 
 const dataSource = createDataSource();
 export default dataSource;
-
-// import { DataSource, DataSourceOptions } from 'typeorm';
-// export const dataSourceOptions: DataSourceOptions = {
-//   // TypeORM PostgreSQL DB Drivers
-//     type: 'postgres',
-//     host: 'localhost',
-//     port: 5432,
-//     username: 'postgres',
-//     password: 'root',
-//     database: 'MigrationDB',
-//     synchronize: false,
-//     entities: ['dist/**/*.entity.js'],
-//     migrations: ['dist/db/migrations/*.js'],
-//     logging: true,
-// };
-
-// const dataSource = new DataSource(dataSourceOptions)
-// export default dataSource

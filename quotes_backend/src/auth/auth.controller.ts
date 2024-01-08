@@ -13,7 +13,9 @@ import { AuthGuard } from '@nestjs/passport';
 import { User } from 'src/user/entities/user.entity';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { UserService } from 'src/user/user.service';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
+@ApiTags("auth")
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -22,6 +24,7 @@ export class AuthController {
   ) {}
 
   @Post('/sign-in')
+  @ApiResponse({ status: 201, description: 'User has been successfully Loggedin.'})
   @UseGuards(AuthGuard('local'))
   login(@Req() req) {
     //jwt token
@@ -37,6 +40,7 @@ export class AuthController {
   }
 
   @Post('/sign-up')
+  @ApiResponse({ status: 201, description: 'User has been successfully created.'})
   async create(@Body(ValidationPipe) createUserDto: CreateUserDto) {
     const existingUser = await this.userService.findUserByEmail(
       createUserDto.email,

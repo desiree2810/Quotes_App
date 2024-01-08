@@ -6,6 +6,7 @@ import quoteService from "../../services/quoteService";
 import QuoteItem from "../shared/QuoteItem";
 import "../shared/Quotes.css";
 import EmptyQuote from "./EmptyQuote";
+import { getToken, getUserId } from "../../utils/localstorageUtils";
 
 const MyQuotes = () => {
   const [activeTab, setActiveTab] = useState("Added Quotes");
@@ -68,8 +69,8 @@ const MyQuotes = () => {
     }
   };
 
-  const token = localStorage.getItem("token");
-  const userId = localStorage.getItem("userId");
+  const token = getToken()
+  const userId = getUserId()
 
   useEffect(() => {
     fetchQuotes();
@@ -201,6 +202,9 @@ const MyQuotes = () => {
     }
   };
 
+  const itemName = "quotes";
+
+
   return (
     <div className="outer-div">
       My Quotes
@@ -252,50 +256,7 @@ const MyQuotes = () => {
           </ul>
         </div>
         <div className="quotes-display">
-          {/* {activeTab === "Added Quotes" && userAddedQuotes.length > 0 ? (
-            userAddedQuotes.map((quote, index) => (
-              <QuoteComponent
-                key={index}
-                quote={quote}
-                userId={userId}
-                loggedInUserId={userId}
-                activeTab={activeTab}
-                deleteQuote={() => deleteQuote(quote.id)}
-                editQuote={() => handleEditClick(quote)}
-                editMode={editMode}
-                setEditQuote={setEditQuote}
-                totalLikedQuotesCount={totalLikedQuotesCount}
-                totalDislikedQuotesCount={totalDislikedQuotesCount}
-              />
-            ))
-          ) : (
-            <div className=" d-flex align-items-center justify-content-center p-5">
-              <div className="main-sub1">
-                <h4>No Quotes to display</h4>
-              </div>
-            </div>
-          )}
-
-          {activeTab === "Liked Quotes" &&
-            allLikedQuotes.map((quote, index) => (
-              <QuoteComponent
-                key={index}
-                quote={quote}
-                userId={userId}
-                loggedInUserId={userId}
-              />
-            ))}
-
-          {activeTab === "Disliked Quotes" &&
-            alldislikedQuotes.map((quote, index) => (
-              <QuoteComponent
-                key={index}
-                quote={quote}
-                userId={userId}
-                loggedInUserId={userId}
-              />
-            ))} */}
-            {/* <div className="quotes-display"> */}
+          
           {activeTab === "Added Quotes" && userAddedQuotes.length > 0 ? (
             userAddedQuotes.map((quote, index) => (
               <QuoteItem
@@ -337,9 +298,8 @@ const MyQuotes = () => {
             ))
           ) : 
           (
-            <EmptyQuote />
+            <EmptyQuote  itemName={itemName}/>
           )}
-        {/* </div> */}
         </div>
       </div>
     </div>

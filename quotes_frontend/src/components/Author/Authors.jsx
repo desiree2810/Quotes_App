@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Authors.css";
 import authorService from "../../services/authorService";
+import EmptyQuote from "../MyQuotes/EmptyQuote";
 
 function Authors({ isAuthenticated }) {
   const [authors, setAuthors] = useState([]);
@@ -54,49 +55,53 @@ function Authors({ isAuthenticated }) {
     navigate(`/quotes?author=${author}`);
   };
 
+  const itemName = "authors";
+
   return (
     <div className="scrollable-page">
       <div className="title-div">Authors</div>
-      <div className="allAuthors">
-        <div className="search-field">
-          <input
-            type="text"
-            placeholder="Search authors"
-            value={searchTerm}
-            onChange={handleSearch}
-          />
+      {authors.length === 0 ? (
+        <EmptyQuote itemName={itemName} />
+      ) : (
+        <div className="allAuthors">
+          <div className="search-field">
+            <input
+              type="text"
+              placeholder="Search authors"
+              value={searchTerm}
+              onChange={handleSearch}
+            />
 
-          {(searchTerm === "" || filteredAuthors.length === 0) && (
-            <ul className="autocomplete-list">
-              {authors.map((author, index) => (
-                <li
-                  key={index}
-                  onClick={() => handleAuthorClick(author)}
-                  className="clickable-author"
-                >
-                  {author}
-                </li>
-              ))}
-            </ul>
-          )}
+            {(searchTerm === "" || filteredAuthors.length === 0) && (
+              <ul className="autocomplete-list">
+                {authors.map((author, index) => (
+                  <li
+                    key={index}
+                    onClick={() => handleAuthorClick(author)}
+                    className="clickable-author"
+                  >
+                    {author}
+                  </li>
+                ))}
+              </ul>
+            )}
 
-          {filteredAuthors.length > 0 && (
-            <ul className="autocomplete-list">
-              {filteredAuthors.map((author, index) => (
-                <li
-                  key={index}
-                  onClick={() => handleAuthorClick(author)}
-                  className="clickable-author"
-                >
-                  {author}
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
+            {filteredAuthors.length > 0 && (
+              <ul className="autocomplete-list">
+                {filteredAuthors.map((author, index) => (
+                  <li
+                    key={index}
+                    onClick={() => handleAuthorClick(author)}
+                    className="clickable-author"
+                  >
+                    {author}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
 
-        {
-          authorQuotes.length > 0 && (
+          {authorQuotes.length > 0 && (
             <div>
               <h2>Quotes by {searchTerm}</h2>
               <div className="quotesforauthor">
@@ -107,9 +112,9 @@ function Authors({ isAuthenticated }) {
                 </ul>
               </div>
             </div>
-          )
-        }
-      </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }

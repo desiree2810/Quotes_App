@@ -6,47 +6,26 @@ import QuoteItem from "../shared/QuoteItem";
 import { faThumbsDown, faThumbsUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import quoteService from "../../services/quoteService";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { getToken, getUserId } from "../../utils/localstorageUtils";
 
 function Quotes({ isAuthenticated }) {
   const [quotes, setQuotes] = useState([]);
   const [filterType, setFilterType] = useState("Author");
   const [searchTerm, setSearchTerm] = useState("");
   const location = useLocation();
-  const loggedInUserId = localStorage.getItem("userId");
+  const loggedInUserId = getUserId()
   const [likeReactionUsers, setLikeReactionUsers] = useState([]);
   const [dislikeReactionUsers, setDislikeReactionUsers] = useState([]);
-  const loggedId = localStorage.getItem("userId");
   const [allUserReactionsList, setAllUserReactionsList] = useState([]);
-
-  const baseURL = import.meta.env.VITE_API_URL;
+  const [likeQuoteCalled, setLikeQuoteCalled] = useState(false);
+  const [dislikeQuoteCalled, setDislikeQuoteCalled] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     fetchQuotes();
   }, [location.search]);
-
-  // const fetchQuotes = async () => {
-  //   try {
-  //     let url = `${baseURL}/quotes`;
-
-  //     const searchParam = location.search;
-  //     if (searchParam) {
-  //       url += searchParam;
-  //     }
-
-  //     const response = await axios.get(url);
-  //     const arrayOfQuotes = response.data;
-  //     console.log(arrayOfQuotes);
-
-  //     if (Array.isArray(arrayOfQuotes) && arrayOfQuotes.length > 0) {
-  //       setQuotes(arrayOfQuotes);
-  //     } else {
-  //       console.log("Empty array or invalid data format");
-  //     }
-  //   } catch (error) {
-  //     console.log("Error fetching quotes:", error);
-  //   }
-  // };
 
   const fetchQuotes = async () => {
     try {
@@ -63,19 +42,6 @@ function Quotes({ isAuthenticated }) {
       console.log("Error fetching quotes:", error);
     }
   };
-
-  // const handleSearch = async () => {
-  //   try {
-  //     if (searchTerm.trim() !== "") {
-  //       let url = `${baseURL}/quotes`;
-
-  //       if (filterType === "Author") {
-  //         url += `?author=${searchTerm}`;
-  //       } else if (filterType === "Quote") {
-  //         url += `?quote=${searchTerm}`;
-  //       } else if (filterType === "Tag") {
-  //         url += `?tag=${searchTerm}`;
-  //       }
 
   const handleSearch = async () => {
     try {
@@ -115,15 +81,28 @@ function Quotes({ isAuthenticated }) {
     fetchQuotes();
   };
 
-  let token = localStorage.getItem("token");
-  let userId = localStorage.getItem("userId");
+  let token = getToken()
+  let userId = getUserId()
 
   // to like a quote
   const likeQuote = async (quoteId) => {
     try {
       if (token && userId) {
-        const response = await quoteService.likeQuote(quoteId, token);
-        console.log("response.data = ", response);
+
+          if (likeQuoteCalled) {
+          const response = await quoteService.removeLikeFromQuote(quoteId, token);
+          console.log("response = ", response);
+        } else {
+          const response = await quoteService.likeQuote(quoteId, token);
+          console.log("response = ", response);
+          if (response.status === 204){
+            notifyResponseIncrement()
+          }
+        }
+
+        // Toggle the state
+        setLikeQuoteCalled(!likeQuoteCalled);
+        
       }
     } catch (error) {
       console.error("Error liking quote:", error);
@@ -134,11 +113,53 @@ function Quotes({ isAuthenticated }) {
   const dislikeQuote = async (quoteId) => {
     try {
       if (token && userId) {
-        const response = await quoteService.dislikeQuote(quoteId, token);
-        console.log("response.data = ", response);
+        if (dislikeQuoteCalled) {
+          const response = await quoteService.removeDislikeFromQuote(quoteId, token);
+          console.log("response = ", response);
+        } else {
+          const response = await quoteService.dislikeQuote(quoteId, token);
+          console.log("response = ", response);
+          if (response.status === 204){
+            notifyResponseIncrement()
+          }
+        }
+        // Toggle the state
+        setDislikeQuoteCalled(!dislikeQuoteCalled);
       }
     } catch (error) {
       console.error("Error disliking quote:", error);
+    }
+  };
+
+  const removeLikeFromQuote = async (quoteId) => {
+    try {
+      if (token && userId) {
+        const response = await quoteService.removeLikeFromQuote(quoteId, token);
+        console.log("response.data = ", response);
+        if (response.status === 204){
+          notifyResponseDecrement()
+        }
+        // Toggle the state
+        setLikeQuoteCalled(!likeQuoteCalled);
+      }
+    } catch (error) {
+      console.error("Error while remove like from quote:", error);
+    }
+  };
+
+  const removeDislikeFromQuote = async (quoteId) => {
+    try {
+      if (token && userId) {
+        const response = await quoteService.removeDislikeFromQuote(quoteId, token);
+        console.log("response.data = ", response);
+        if (response.status === 204){
+          notifyResponseDecrement()
+        }
+        // Toggle the state
+        setDislikeQuoteCalled(!dislikeQuoteCalled);
+      }
+    } catch (error) {
+      console.error("Error while remove dislike from quote:", error);
     }
   };
 
@@ -230,6 +251,17 @@ function Quotes({ isAuthenticated }) {
       console.log("Error while getting the user list:", error);
     }
   };
+
+  const notifyResponseIncrement = () => toast.success(<>
+  <div>Your response is recorded</div>
+  <div>Same will get reflected in 30 seconds</div>
+  </>);
+
+const notifyResponseDecrement = () => toast.error(<>
+  <div>Your response is recorded</div>
+  <div>Same will get reflected in 30 seconds</div>
+  </>);
+
   return (
     <div className="scrollable-page1">
       <div className="title-div">Quotes</div>
@@ -274,29 +306,20 @@ function Quotes({ isAuthenticated }) {
             </div>
           )}
         </div>
+        <ToastContainer 
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover={false}
+          type="error"
+          theme="light"
+          />
 
-        {/* {quotes.length > 0 ? (
-          quotes.map((quote, index) => (
-            <QuoteItem
-              key={index}
-              quote={quote}
-              userId={userId}
-              loggedInUserId={loggedInUserId}
-              likeQuote={likeQuote}
-              dislikeQuote={dislikeQuote}
-              getLikedUsers={getLikedUsers}
-              getDislikedUsers={getDislikedUsers}
-              getAllLikedUsers={getAllLikedUsers}
-              getAllDislikedUsers={getAllDislikedUsers}
-            />
-          ))
-        ) : (
-          <div className="scrollable-page1 d-flex align-items-center justify-content-center p-5">
-            <div className="main-sub1">
-              <h4>No Quotes Available to Display</h4>
-            </div>
-          </div>
-        )} */}
         {quotes.length > 0 ? (
           quotes.map((quote, index) => (
             <QuoteItem
@@ -310,6 +333,10 @@ function Quotes({ isAuthenticated }) {
               getDislikedUsers={getDislikedUsers}
               getAllLikedUsers={getAllLikedUsers}
               getAllDislikedUsers={getAllDislikedUsers}
+              removeLikeFromQuote={removeLikeFromQuote}
+              removeDislikeFromQuote={removeDislikeFromQuote}
+              likeQuoteCalled={likeQuoteCalled}
+              dislikeQuoteCalled={dislikeQuoteCalled}
             />
           ))
         ) : (

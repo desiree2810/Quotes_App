@@ -22,7 +22,11 @@ const QuoteComponent = ({
   activeTab,
   deleteQuote,
   editQuote,
-  loggedId
+  loggedId,
+  removeLikeFromQuote,
+  removeDislikeFromQuote,
+  likeQuoteCalled,
+  dislikeQuoteCalled
 }) => {
   return (
     <blockquote>
@@ -35,7 +39,13 @@ const QuoteComponent = ({
                 onClick={
                   quote.userId === userId
                     ? () => getLikedUsers(quote.id)
-                    : () => likeQuote(quote.id)
+                    : () => {
+                        if (likeQuoteCalled) {
+                          removeLikeFromQuote(quote.id);
+                        } else {
+                          likeQuote(quote.id);
+                        }
+                      }
                 }
                 style={{ marginRight: "5px" }}
               >
@@ -58,7 +68,13 @@ const QuoteComponent = ({
                 onClick={
                   quote.userId === userId
                     ? () => getDislikedUsers(quote.id)
-                    : () => dislikeQuote(quote.id)
+                    : () => {
+                        if (dislikeQuoteCalled) {
+                          removeDislikeFromQuote(quote.id);
+                        } else {
+                          dislikeQuote(quote.id);
+                        }
+                      }
                 }
                 style={{ marginRight: "5px" }}
               >
