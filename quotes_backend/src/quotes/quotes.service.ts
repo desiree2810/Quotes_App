@@ -14,6 +14,7 @@ import { Repository, ILike } from 'typeorm';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { UserService } from 'src/user/user.service';
 import { QuoteRepository } from './quotes.repository';
+import { UserQuoteReactionRepository } from 'src/user-quote-reaction/user-quote-reaction-repository';
 
 @Injectable()
 export class QuotesService {
@@ -21,7 +22,7 @@ export class QuotesService {
     @InjectRepository(Quote)
     private readonly quoteRepository: QuoteRepository,
     @InjectRepository(UserQuoteReaction)
-    private readonly userQuoteReactionRepository: Repository<UserQuoteReaction>,
+    private readonly userQuoteReactionRepository: UserQuoteReactionRepository,
     private readonly userService: UserService,
   ) {}
 

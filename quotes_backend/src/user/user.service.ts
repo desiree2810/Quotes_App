@@ -9,6 +9,7 @@ import { Quote } from 'src/quotes/entities/quote.entity';
 import * as bcrypt from 'bcrypt';
 import { UserRepository } from './user.repository';
 import { QuoteRepository } from 'src/quotes/quotes.repository';
+import { UserQuoteReactionRepository } from 'src/user-quote-reaction/user-quote-reaction-repository';
 
 @Injectable()
 export class UserService {
@@ -19,7 +20,7 @@ export class UserService {
     @InjectRepository(Quote)
     private readonly QuoteRepository: QuoteRepository,
     @InjectRepository(UserQuoteReaction)
-    private readonly UserQuoteReactionRepository: Repository<UserQuoteReaction>,
+    private readonly UserQuoteReactionRepository: UserQuoteReactionRepository,
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {

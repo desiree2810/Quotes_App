@@ -16,9 +16,11 @@ import { CreateQuoteDto } from './dto/create-quote.dto';
 import { UpdateQuoteDto } from './dto/update-quote.dto';
 import { SkipThrottle } from '@nestjs/throttler';
 import { JwtAuthGuard } from 'src/auth/guard/jwt.guard';
+import { ApiTags, ApiSecurity } from '@nestjs/swagger';
 
 @SkipThrottle()
 @Controller('quotes')
+@ApiTags('Quotes')
 export class QuotesController {
   constructor(private readonly quotesService: QuotesService) {}
 
@@ -30,6 +32,7 @@ export class QuotesController {
     return this.quotesService.findAll(filter);
   }
 
+  @ApiSecurity("JWT-auth")
   @UseGuards(JwtAuthGuard)
   @Post()
   create(@Body() createQuoteDto: CreateQuoteDto, @Request() req: any) {
@@ -38,24 +41,28 @@ export class QuotesController {
     return this.quotesService.create(createQuoteDto, userId);
   }
 
+  @ApiSecurity("JWT-auth")
   @UseGuards(JwtAuthGuard)
   @Get('tags')
   getAllTagsByQuote() {
     return this.quotesService.getAllTagsByQuote();
   }
 
+  @ApiSecurity("JWT-auth")
   @UseGuards(JwtAuthGuard)
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.quotesService.findOne(id);
   }
 
+  @ApiSecurity("JWT-auth")
   @UseGuards(JwtAuthGuard)
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateQuoteDto: UpdateQuoteDto) {
     return this.quotesService.update(id, updateQuoteDto);
   }
 
+  @ApiSecurity("JWT-auth")
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
   remove(@Param('id') id: string) {
@@ -63,6 +70,7 @@ export class QuotesController {
   }
 
   //to extract the userid from the jwt token--> to like a quote using patch request
+  @ApiSecurity("JWT-auth")
   @UseGuards(JwtAuthGuard)
   @Patch(':id/like/up')
   @HttpCode(204)
@@ -78,6 +86,7 @@ export class QuotesController {
     }
   }
 
+  @ApiSecurity("JWT-auth")
   @UseGuards(JwtAuthGuard)
   @Patch(':id/dislike/up')
   @HttpCode(204)
@@ -93,6 +102,7 @@ export class QuotesController {
     }
   }
 
+  @ApiSecurity("JWT-auth")
   @UseGuards(JwtAuthGuard)
   @Patch(':id/like/down')
   @HttpCode(204)
@@ -108,6 +118,7 @@ export class QuotesController {
     }
   }
 
+  @ApiSecurity("JWT-auth")
   @UseGuards(JwtAuthGuard)
   @Patch(':id/dislike/down')
   @HttpCode(204)
@@ -124,6 +135,7 @@ export class QuotesController {
   }
 
   // find all users who liked the quote
+  @ApiSecurity("JWT-auth")
   @UseGuards(JwtAuthGuard)
   @Get(':id/like/users')
   async getAllLikedUsers(@Param('id') id: string) {
@@ -137,6 +149,8 @@ export class QuotesController {
     }
   }
 
+
+  @ApiSecurity("JWT-auth")
   @UseGuards(JwtAuthGuard)
   @Get(':id/dislike/users')
   async getAllDislikedUsers(@Param('id') id: string) {

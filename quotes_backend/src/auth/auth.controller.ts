@@ -14,9 +14,10 @@ import { User } from 'src/user/entities/user.entity';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { UserService } from 'src/user/user.service';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { LoginDto } from './dto/login.dto';
 
-@ApiTags("auth")
 @Controller('auth')
+@ApiTags("Authentication")
 export class AuthController {
   constructor(
     private jwtService: JwtService,
@@ -26,7 +27,7 @@ export class AuthController {
   @Post('/sign-in')
   @ApiResponse({ status: 201, description: 'User has been successfully Loggedin.'})
   @UseGuards(AuthGuard('local'))
-  login(@Req() req) {
+  login(@Req() req , @Body() loginDto : LoginDto) {
     //jwt token
     const user: User = req.user;
     const payload = {

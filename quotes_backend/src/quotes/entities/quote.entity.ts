@@ -1,11 +1,10 @@
-import {Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn} from 'typeorm';
+import {Column,Entity, JoinColumn, ManyToOne} from 'typeorm';
 import { User } from 'src/user/entities/user.entity';
+import { AuditingEntity } from 'src/core/entities/auditing.entity';
 
 
 @Entity({ name: 'quote' })
-export class Quote {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+export class Quote extends AuditingEntity {
 
   @Column()
   quote: string;
@@ -21,12 +20,6 @@ export class Quote {
 
   @Column()
   tag: string;
-
-  @CreateDateColumn({type: 'timestamp', default: () => 'CURRENT_TIMESTAMP(6)'})
-  created_at: Date;
-
-  @UpdateDateColumn({type: 'timestamp',default: () => 'CURRENT_TIMESTAMP(6)',onUpdate: 'CURRENT_TIMESTAMP(6)',})
-  updated_at: Date;
 
   @Column({ name: 'user_id' })
   userId: string;
