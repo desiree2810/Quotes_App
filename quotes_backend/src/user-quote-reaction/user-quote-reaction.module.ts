@@ -7,8 +7,8 @@ import { UserQuoteReactionRepository } from './user-quote-reaction-repository';
 
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UserQuoteReactionRepository,UserQuoteReaction])],
+  imports: [TypeOrmModule.forFeature([UserQuoteReaction])],
   controllers: [UserQuoteReactionController],
-  providers: [UserQuoteReactionService],
+  providers: [UserQuoteReactionService,UserQuoteReactionRepository],
 })
 export class UserQuoteReactionModule {}
